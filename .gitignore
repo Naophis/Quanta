@@ -1,0 +1,14 @@
+.settings/
+DefaultBuild/
+src/
+.cproject
+.Debuglinker
+.DefaultBuildlinker
+.info
+.project
+custom.bat
+*.mtpj
+*.*.mtud
+*.rcpe
+*.launch
+*.src
