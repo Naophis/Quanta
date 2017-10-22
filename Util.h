@@ -537,8 +537,8 @@ int direction(int Dir, int SLRB) {
 void logOutPut() {
 	while (Swich == 1)
 		;
-	myprintf("%c[2J", ESC); /* 画面消去 */
-	myprintf("%c[0;0H", ESC); /* 戦闘戻す*/
+//	myprintf("%c[2J", ESC); /* 画面消去 */
+//	myprintf("%c[0;0H", ESC); /* 戦闘戻す*/
 	for (c = 0; c < L_Length; c++) {
 		if (c > 500 && log5[c] == 0) {
 //			break;

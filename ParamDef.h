@@ -12,12 +12,12 @@
 const float WHEEL = TIRE / 2000;
 const float GEAR = 63.0 / 19.0;
 #define DUTY_MAX 70.0f
-#define Ke 0.0000896f
-#define Km 0.000855f
+#define Ke 0.000368613538f
+#define Km 0.00352f
 #define Resist 2.9f
 #define Mass 0.101f
-#define Lm 0.001f
-#define friction 0.0001f
+#define Lm 0.002f
+#define friction 0.000625f
 
 #define W_ENCORDER_LIMIT 100
 #define W_ENCORDER_LIMIT2 10
@@ -70,9 +70,9 @@ float L_WALL_EXIST = 750;  //探索時壁判定
 float RF_WALL_EXIST = 550; //探索時壁判定
 float LF_WALL_EXIST = 550; //探索時壁判定
 
-float FRONT_CTRL_R = 6900;   //前壁補正
+float FRONT_CTRL_R = 690;   //前壁補正
 float FRONT_CTRL_L = 690;	//前壁補正
-float RF_WALL_EXIST2 = 4500; //前壁補正　開始
+float RF_WALL_EXIST2 = 450; //前壁補正　開始
 float LF_WALL_EXIST2 = 50;   //前壁補正　開始
 
 float wallhosei = 100;
@@ -167,8 +167,8 @@ void importParam()
 	RF_WALL_EXIST = 550; //探索時壁判定
 	LF_WALL_EXIST = 550; //探索時壁判定
 
-	FRONT_CTRL_R = 700;   //前壁補正
-	FRONT_CTRL_L = 400;	//前壁補正
+	FRONT_CTRL_R = 670;   //前壁補正
+	FRONT_CTRL_L = 460;	//前壁補正
 	RF_WALL_EXIST2 = 580; //前壁補正　開始
 	LF_WALL_EXIST2 = 300;   //前壁補正　開始
 

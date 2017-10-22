@@ -40,7 +40,7 @@ char runForPath(float max, float ac, float diac) {
 		TRANSAM = true;
 		LED6 = true;
 		LED1 = true;
-//		startVacume2(90);
+		startVacume2(90);
 	}
 	turnVarys = turnVary(path_t[0]);
 	slaVelocity = turnVelocity(turnVarys);

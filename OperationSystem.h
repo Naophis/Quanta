@@ -104,55 +104,64 @@ void testRun2(float v, float accele, float diaccele, float dist, float vM) {
 //inputRadiusDatas(Normal, 44.5, 45.5, 108.75, 33, 9, 21.5, 0, 0);
 
 void inputNaiperTurnAll500_2() {
-	setPrms(Normal, 90, 43.5, 15.5, 24.50, 0, 0, 0.11323165893554688, 2, 500);
-	setPrms3(Normal, 15.5, 24.5);
+	setPrms(Large, 90, 120.0, 16.0, 5.0, 0, 0, 0.1234884262084961, 4, 1000);
+	setPrms3(Large, 14.0, 0);
+	setPrms(Orval, 180, 86.25, 10.0, 20.0, 0, 0, 0.17751407623291016, 4, 1000);
+	setPrms3(Orval, 13, 0);
+	setPrms(Dia45, 45, 120, 10, 20.0, 60.75, 9, 0.06174468994140625, 4, 1000);
+	setPrms3(Dia45, 10.5, 58.25);
+	setPrms(Dia135, 135, 80.0, 32.0, 10, 26, 15.5, 0.1234884262084961, 4, 1000);
+	setPrms3(Dia135, 19.5, 19.5);
+	setPrms(Dia90, 90, 80.0, 14.0, 10.0, 0, 0, 0.08232593536376953, 4, 1000);
+	setPrms3(Dia90, 12.5, 0);
+	setPrms(Normal, 90, 43.5, 12.75, 28.0, 0, 0, 0.0943603515625, 2, 600);
+	setPrms3(Normal, 17.5, 32.0);
 }
 
 void inputNaiperTurnAll1200() {
-	setPrms(Large, 90, 60.0, 8.0, 15.0, 0, 0, 0.1234884262084961, 4, 500);
-	setPrms3(Large, 6, 15);
-	setPrms(Orval, 180, 43.0, 15.0, 5.0, 0, 0, 0.1770000457763672, 4, 500);
-	setPrms3(Orval, 15, 0);
-	setPrms(Dia45, 45, 50.0, 9.0, 5.0, 32, 8, 0.051453590393066406, 4, 500);
-	setPrms3(Dia45, 10.0, 27);
-	setPrms(Dia135, 135, 42.0, 10.0, 15, 4, 5.5, 0.12966251373291016, 4, 500);
-	setPrms3(Dia135, 11.0, 1);
-	setPrms(Dia90, 90, 40.0, 10, 5.0, 0, 0, 0.08232593536376953, 4, 500);
-	setPrms3(Dia90, 3.5, 0);
+	setPrms(Large, 90, 120.0, 22.75, 5.0, 0, 0, 0.10290718078613281, 4, 1200);
+	setPrms3(Large, 24.0, 0);
+	setPrms(Orval, 180, 86.125, 35.0, 35.0, 0, 0, 0.14771461486816406, 4, 1200);
+	setPrms3(Orval, 35, 0);
+	setPrms(Dia45, 45, 120.0, 20.50, 20.0, 64.5, 1, 0.0517578125, 4, 1200);
+	setPrms3(Dia45, 23, 58);
+	setPrms(Dia135, 135, 83.0, 27, 15, 14.5, 5.5, 0.1067657470703125, 4, 1200);
+	setPrms3(Dia135, 31.0, 13.5);
+	setPrms(Dia90, 90, 80.0, 19.5, 10.0, 0, 0, 0.0686044692993164, 4, 1200);
+	setPrms3(Dia90, 18.75, 0);
 }
 
 void inputNaiperTurnAll1500() {
-	setPrms(Large, 90, 60.0, 6.5, 15.0, 0, 0, 0.08820629119873047, 4, 700);
-	setPrms3(Large, 7, 15);
-	setPrms(Orval, 180, 49.0, 15.0, 5.0, 0, 0, 0.14406967163085938, 4, 700);
-	setPrms3(Orval, 15, 0);
-	setPrms(Dia45, 45, 50.0, 7.0, 5.0, 25, 1, 0.03675270080566406, 4, 700);
-	setPrms3(Dia45, 2.0, 27);
-	setPrms(Dia135, 135, 42.0, 23, 15, 23, 5.5, 0.09261608123779297, 4, 700);
-	setPrms3(Dia135, 18.0, 19);
-	setPrms(Dia90, 90, 45.0, 2, 5.0, 0, 0, 0.06615447998046875, 4, 700);
-	setPrms3(Dia90, 5, 0);
+	setPrms(Large, 90, 120.0, 19.0, 5.0, 0, 0, 0.08232593536376953, 4, 1500);
+	setPrms3(Large, 16.0, 0);
+	setPrms(Orval, 180, 86.125, 35.0, 25.0, 0, 0, 0.11817169189453125, 4, 1500);
+	setPrms3(Orval, 35, 0);
+	setPrms(Dia45, 45, 120, 15.5, 5, 55, 5, 0.04116344451904297, 4, 1500);
+	setPrms3(Dia45, 11.750, 47);
+	setPrms(Dia135, 135, 83, 19.0, 10, 5, 10, 0.08541297912597656, 4, 1500);
+	setPrms3(Dia135, 23.0, 1.50);
+	setPrms(Dia90, 90, 83.0, 12.0, 7.0, 0, 0, 0.056941986083984375, 4, 1500);
+	setPrms3(Dia90, 7.0, 0);
 }
 
 void inputNaiperTurnAll1700() {
-	setPrms(Large, 90, 60.0, 6.5, 15.0, 0, 0, 0.08820629119873047, 4, 700);
-	setPrms3(Large, 7, 15);
-	setPrms(Orval, 180, 49.0, 15.0, 5.0, 0, 0, 0.14406967163085938, 4, 700);
-	setPrms3(Orval, 15, 0);
-	setPrms(Dia45, 45, 50.0, 7.0, 5.0, 25, 1, 0.03675270080566406, 4, 700);
-	setPrms3(Dia45, 2.0, 27);
-	setPrms(Dia135, 135, 42.0, 23, 15, 23, 5.5, 0.09261608123779297, 4, 700);
-	setPrms3(Dia135, 18.0, 19);
-	setPrms(Dia90, 90, 45.0, 2, 5.0, 0, 0, 0.06615447998046875, 4, 700);
-	setPrms3(Dia90, 5, 0);
+	setPrms(Large, 90, 120.0, 8.0, 2.0, 0, 0, 0.07264041900634766, 4, 1700);
+	setPrms3(Large, 11.0, 0);
+	setPrms(Orval, 180, 86.125, 35.0, 45.0, 0, 0, 0.10426902770996094, 4, 1700);
+	setPrms3(Orval, 35, 0);
+	setPrms(Dia45, 45, 120.0, 5.0, 2, 47, 1, 0.03632068634033203, 4, 1700);
+	setPrms3(Dia45, 7.5, 47);
+	setPrms(Dia135, 135, 80.0, 21.50, 16.5, 8.5, 12, 0.07264041900634766, 4,
+			1700);
+	setPrms3(Dia135, 20.5, 0);
+	setPrms(Dia90, 90, 80.0, 5, 10.0, 0, 0, 0.048427581787109375, 4, 1700);
+	setPrms3(Dia90, 5.0, 0);
 }
 void inputNaiperTurnAll1800() {
-	setPrms(Large, 90, 120.0, 7, 2.0, 0, 0, 0.0686044692993164, 4, 1800);
-	setPrms3(Large, 6.0, 0);
-
+	setPrms(Large, 90, 120.0, 15, 15.0, 0, 0, 0.0686044692993164, 4, 1800);
+	setPrms3(Large, 15.0, 0);
 	setPrms(Orval, 180, 86.125, 35.0, 45.0, 0, 0, 0.09847640991210938, 4, 1800);
 	setPrms3(Orval, 35, 0);
-
 	setPrms(Dia45, 45, 105.0, 7, 30.0, 52.5, 2, 0.030014991760253906, 4, 1800);
 	setPrms3(Dia45, 8.50, 54);
 	setPrms(Dia135, 135, 80.0, 19.75, 15, 5, 25, 0.0686044692993164, 4, 1800);
@@ -223,8 +232,8 @@ void testSlalom() {
 }
 void sla3(float vMax) {
 	float maxVelocity = vMax;
-	float accele = 6000;
-	float diaccele = 6000;
+	float accele = 18000;
+	float diaccele = 18000;
 	inputNaiperTurnAll1500();
 	char RorL = eigherRightLeft() == Right ? R : L;
 
@@ -235,7 +244,7 @@ void sla3(float vMax) {
 	readGyroParam();
 	readVelocityGain();
 
-	if (vMax > 1200) {
+	if (vMax >= 1200) {
 		startVacume2(95);
 //		cmt_wait(500);
 	}
@@ -246,19 +255,17 @@ void sla3(float vMax) {
 //	dia = 1;
 
 //	changeMode(true);
-	setPrms(Large, 90, 60.0, 8.0, 15.0, 0, 0, 0.1234884262084961, 4, 500);
-	setPrms3(Large, 6, 15);
-	setPrms(Orval, 180, 43.0, 15.0, 5.0, 0, 0, 0.1770000457763672, 4, 500);
-	setPrms3(Orval, 15, 0);
-	setPrms(Dia45, 45, 50.0, 9.0, 5.0, 32, 8, 0.051453590393066406, 4, 500);
-	setPrms3(Dia45, 10.0, 27);
-	setPrms(Dia135, 135, 42.0, 10.0, 15, 4, 5.5, 0.12966251373291016, 4, 500);
-	setPrms3(Dia135, 11.0, 1);
-	setPrms(Dia90, 90, 40.0, 10, 5.0, 0, 0, 0.08232593536376953, 4, 500);
-	setPrms3(Dia90, 3.5, 0);
 
-	setPrms(Normal, 90, 43.5, 15.5, 24.50, 0, 0, 0.11323165893554688, 2, 500);
-	setPrms3(Normal, 5.5, 43.25);
+	setPrms(Large, 90, 120.0, 16.0, 5.0, 0, 0, 0.1234884262084961, 4, 1000);
+	setPrms3(Large, 14.0, 0);
+	setPrms(Orval, 180, 86.25, 10.0, 20.0, 0, 0, 0.17751407623291016, 4, 1000);
+	setPrms3(Orval, 13, 0);
+	setPrms(Dia45, 45, 120, 10, 20.0, 60.75, 9, 0.06174468994140625, 4, 1000);
+	setPrms3(Dia45, 10.5, 58.25);
+	setPrms(Dia135, 135, 80.0, 32.0, 10, 26, 15.5, 0.1234884262084961, 4, 1000);
+	setPrms3(Dia135, 19.5, 19.5);
+	setPrms(Dia90, 90, 80.0, 14.0, 10.0, 0, 0, 0.08232593536376953, 4, 1000);
+	setPrms3(Dia90, 12.5, 0);
 
 	save();
 
@@ -269,8 +276,8 @@ void sla3(float vMax) {
 	cc = 1;
 	logs = 0;
 
-//	wallOff(RorL);
-	slalom3(RorL, Normal, vMax, vMax, 0);
+	wallOff(RorL);
+	slalom3(RorL, Large, vMax, vMax, 0);
 //	wallOff(RorL == R ? L : R);
 //	slalom3(RorL == R ? L : R, Dia45, vMax, vMax, 0);
 	cc = 0;
@@ -302,23 +309,23 @@ void testNormalSlalom(float vMax) {
 	changeMode(true);
 	inputNaiperTurnAll1500();
 
-	setPrms(Normal, 90, 43.5, 6.75, 38.50, 0, 0, 0.11323165893554688, 2, 500);
-	setPrms3(Normal, 5.5, 43.25);
+	setPrms(Normal, 90, 43.5, 12.75, 28.0, 0, 0, 0.0943603515625, 2, 600);
+	setPrms3(Normal, 17.5, 32.0);
 
 	save();
 
-//	running2(maxVelocity, accele, 360, 1);
-	realRun(vMax, accele, diaccele, 180.0 * 0.5, vMax);
+	running2(maxVelocity, accele, 360, 1);
+//	realRun(vMax, accele, diaccele, 180.0 * 0.5, vMax);
 	gyroOn = 0;
 	logs = 0;
 	time = 0;
 	cc = 1;
 	logs = 0;
-
-	frontCtrl();
-	resetAllData();
-	mtu_stop2();
-	ledOn = 1;
+//
+//	frontCtrl();
+//	resetAllData();
+//	mtu_stop2();
+//	ledOn = 1;
 //	while (1) {
 //		myprintf("%f %f %d %d %f %f  \r\n", LF_SEN1.now, RF_SEN1.now,
 //				LF_SEN1.now < FRONT_CTRL_L, RF_SEN1.now < FRONT_CTRL_R,
@@ -873,46 +880,44 @@ char action(char mode, char goalX, char goalY, char fastMode) {
 		makePath(goalX, goalY, isFull);
 		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll1200();
+		inputNaiperTurnAll1800();
 		save2();
-		char check = runForPath(500, 3000, 3000);
+		char check = runForPath(3500, 18000, 18000);
 	} else if (mode == RUN2) {
 		makePath(goalX, goalY, isFull);
 		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll1200();
+		inputNaiperTurnAll1800();
 		save2();
-		char check = runForPath(700, 3000, 3000);
+		char check = runForPath(4000, 20000, 18000);
 	} else if (mode == RUN3) {
 		makePath(goalX, goalY, isFull);
 		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll1200();
+		inputNaiperTurnAll1800();
 		save2();
-		char check = runForPath(800, 3000, 3000);
+		char check = runForPath(4500, 20000, 18000);
 	} else if (mode == RUN4) {
 		makePath(goalX, goalY, isFull);
 		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll1200();
+		inputNaiperTurnAll1800();
 		save2();
-		char check = runForPath(900, 3000, 3000);
+		char check = runForPath(5000, 20000, 18000);
 	} else if (mode == RUN5) {
 		makePath(goalX, goalY, isFull);
 		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll1200();
+		inputNaiperTurnAll1800();
 		save2();
-		char check = runForPath(1000, 3000, 3000);
+		char check = runForPath(4500, 20000, 18000);
 	} else if (mode == CONFIG) {
 		makePath(goalX, goalY, isFull);
 		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll1200();
+		inputNaiperTurnAll1800();
 		save2();
-		char check = runForPath(500, 3000, 3000);
-		save2();
-		runForPath(4100, 17000, 15000);
+		char check = runForPath(4500, 20000, 18000);
 	} else if (mode == CONFIG2) {
 		oneUp(250);
 //		TRANSAM = true;
@@ -1039,15 +1044,15 @@ void operation() {
 //	testRoll(L);
 //	testWallOff(200);
 //	testWallOffSeach(500);
-//	testNormalSlalom(500);
-	sla3(500);
+//	testNormalSlalom(600);
+//	sla3(1700);
 //	inputData2();
 //	testVacume2(90);
 //	testWallOff();
 //	checkIsoukeisu();
 //	cirquit();
 //	checkMemory(goalX, goalY);
-//	cirquit();
+	cirquit();
 
 	while (1) {
 		int res = action(encorderOperation(), goalX, goalY, false);

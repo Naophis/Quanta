@@ -267,7 +267,7 @@ float feadforward_para(char RorL) {
 }
 
 float FF_calc(char RorL) {
-	return 0;
+//	return 0;
 	float rpm = getRpm(RorL);
 	float resist = Resist * friction / Km;
 	if (rpm < 0) {

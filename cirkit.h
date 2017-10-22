@@ -14,10 +14,10 @@ void cirquit() {
 	//////	//#define R_WALL 5025
 	for (char i = 0; i < 8; i += 2) {
 		// 部室迷路サーキット #define R_WALLを4000にすること
-		path_s[i] = 12;
-		path_t[i] = 5;
-		path_s[i + 1] = 2;
-		path_t[i + 1] = 5;
+//		path_s[i] = 12;
+//		path_t[i] = 5;
+//		path_s[i + 1] = 2;
+//		path_t[i + 1] = 5;
 //
 //// フル迷路サーキット
 ////
@@ -32,10 +32,10 @@ void cirquit() {
 		 path_s[i + 1] = 28;
 		 path_t[i + 1] = 5;*/
 
-//		path_s[i] = 8;	//部屋のサーキット
-//		path_t[i] = 5;
-//		path_s[i + 1] = 4;
-//		path_t[i + 1] = 5;
+		path_s[i] = 8;	//部屋のサーキット
+		path_t[i] = 5;
+		path_s[i + 1] = 4;
+		path_t[i + 1] = 5;
 	}
 
 	path_s[0] += 3;
