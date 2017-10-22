@@ -69,10 +69,10 @@ char runForPath(float max, float ac, float diac) {
 		if (dist > 0 || i == 0) {
 			if (dia == 0) {
 				if (i == 0) {
-					check = realRun(max, ac, diac, (dist) * 90 + 19,
+					check = realRun(max, ac, diac, (dist) * 180 + 19,
 							slaVelocity);
 				} else {
-					check = realRun(max, ac, diac, dist * 90 + slalomDist,
+					check = realRun(max, ac, diac, dist * 180 + slalomDist,
 							slaVelocity);
 				}
 			} else {
@@ -80,7 +80,7 @@ char runForPath(float max, float ac, float diac) {
 //					slalomDist -= 20;
 				}
 				check = realRun(max, ac * 0.8, diac * 0.8,
-						dist * ROOT2 * 90 + slalomDist, slaVelocity);
+						dist * ROOT2 * 180 + slalomDist, slaVelocity);
 			}
 		}
 		if (!check) {
@@ -119,7 +119,7 @@ char runForPath(float max, float ac, float diac) {
 			return 0;
 		}
 	}
-	running(50, -diac, 45, 1);
+	running(50, -diac, 90, 1);
 
 	if (!dia) {
 		frontCtrl2();
@@ -169,38 +169,38 @@ char runForKnownPath(float max, float ac, float diac) {
 		if (dist > 0) {
 			if (dia == 0) {
 				if (path_t[i] == 255 && tmp) {
-					check = realRun(max, ac, diac, dist * 90 + slalomDist + 25,
+					check = realRun(max, ac, diac, dist * 180 + slalomDist + 25,
 							slaVelocity);
 				} else if (path_t[i] != 255
 						&& !(path_t[i] == 1 || path_t[i] == 2)) {
-					check = realRun(max, ac, diac, dist * 90 + slalomDist - 35,
+					check = realRun(max, ac, diac, dist * 180 + slalomDist - 35,
 							slaVelocity);
 					tmp = true;
 				} else if (path_t[i] == 1 || path_t[i] == 2) {
 					if (tmp) {
 						if (dist >= 1) {
 							check = realRun(max, ac, diac,
-									dist * 90 + slalomDist - 45, slaVelocity);
+									dist * 180 + slalomDist - 45, slaVelocity);
 						}
-						check = running2(slaVelocity, ac, 60, 1);
+						check = running2(slaVelocity, ac, 90, 1);
 						tmp = false;
 					} else {
-						check = realRun(max, ac, diac, dist * 90 + slalomDist,
+						check = realRun(max, ac, diac, dist * 180 + slalomDist,
 								slaVelocity);
 					}
 				} else {
 					if (dist >= 1) {
 						check = realRun(max, ac, diac,
-								dist * 90 - 45 + slalomDist, slaVelocity);
-						check = running2(slaVelocity, ac, 45, 1);
+								dist * 180 - 90 + slalomDist, slaVelocity);
+						check = running2(slaVelocity, ac, 90, 1);
 					} else {
-						check = realRun(max, ac, diac, dist * 90 + slalomDist,
+						check = realRun(max, ac, diac, dist * 180 + slalomDist,
 								slaVelocity);
 					}
 				}
 			} else {
 				check = realRun(max, ac * 0.8, diac * 0.8,
-						dist * ROOT2 * 90 + slalomDist, slaVelocity);
+						dist * ROOT2 * 180 + slalomDist, slaVelocity);
 			}
 		}
 		if (!check) {

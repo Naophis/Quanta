@@ -250,36 +250,6 @@ void initGPT01() {
 
 	SYSTEM.PRCR.WORD = 0xA500;	// protext off
 }
-void initGPT2() {
-	SYSTEM.PRCR.WORD = 0xA503;
-	MSTP (GPT) = 0;
-	MSTP (GPT2) = 0;
-	//PMR = 1
-	PORTE.PDR.BIT.B3 = 1;
-
-	//protect off
-	MPC.PWPR.BIT.B0WI = 0;
-	MPC.PWPR.BIT.PFSWE = 1;
-
-	GPT2.GTCNT = 0;
-	GPT2.GTCR.BIT.MD = 0;
-	GPT2.GTUDC.WORD = 0;
-	GPT2.GTCR.BIT.TPCS = 0;
-	GPT2.GTIOR.BIT.GTIOA = 6;
-	PORTE.PMR.BIT.B3 = 1;
-	MPC.PE3PFS.BIT.PSEL = 0x1E; //GPT2 GTIOC2A
-	GPT2.GTONCR.BIT.OAE = 1;
-	GPT2.GTBER.BIT.CCRA = 1;
-	GPT2.GTPR = M_CYCLE;
-	GPT2.GTCCRA = M_CYCLE / 2;
-	GPT2.GTCCRC = M_CYCLE / 2; //	GPT.GTSTR.BIT.CST2 = 1;
-	//protect on
-	MPC.PWPR.BIT.B0WI = 1;
-	MPC.PWPR.BIT.PFSWE = 0;
-	SYSTEM.PRCR.WORD = 0xA500;	// protext off
-	//start
-//	GPT.GTSTR.BIT.CST2 = 1;
-}
 void init_Mtu4() {
 	SYSTEM.PRCR.WORD = 0xA503; // Protect off
 	/*	P257でベクタテーブルの説明	*/

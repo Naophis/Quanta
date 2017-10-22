@@ -15,9 +15,13 @@ void sensor_led_off() {
 	PORT2.PODR.BIT.B4 = 0;
 	PORT2.PODR.BIT.B3 = 0;
 }
+void getBattery();
 void sensing_battery() {
 	S12AD.ADANSA0.BIT.ANSA0 = 0x80; //battery
 	S12AD.ADCSR.BIT.ADST = 1;
+	while (S12AD.ADCSR.BIT.ADST)
+		;
+	getBattery();
 }
 void sensing_in_off() {
 	S12AD.ADANSA0.BIT.ANSA0 = 0x7E; //battery

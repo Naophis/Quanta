@@ -31,7 +31,7 @@ void sensourCheck() {
 	ledOn = 0;
 }
 void testRun() {
-	float velocity = 300;
+	float velocity = 500;
 	float accele = 2000;
 	float diaccele = 2000;
 	float vMax = 100;
@@ -45,10 +45,9 @@ void testRun() {
 	cc = 1;
 	gyroOn = 1;
 	V_now = 0;
-
 	mtu_start();
 //	dia = 1;
-	realRun(velocity, accele, diaccele, 90.0 * 7, vMax);
+	realRun(velocity, accele, diaccele, 180.0 * 4.5, vMax);
 //	wallOff(R);
 //	running2(velocity, accele, 180, 1);
 //	V_now = 0;
@@ -104,19 +103,12 @@ void testRun2(float v, float accele, float diaccele, float dist, float vM) {
 // search parm
 //inputRadiusDatas(Normal, 44.5, 45.5, 108.75, 33, 9, 21.5, 0, 0);
 
-void inputNaiperTurnAll300() {
-	setPrms(Normal, 90, 22, 9.4, 18.5, 0, 0, 0.0954446792602539, 2, 300);
-	setPrms3(Normal, 10, 18);
-
-	setPrms(Normal, 90, 22, 7.5, 18.20, 0, 0, 0.0954446792602539, 2, 300);
-	setPrms3(Normal, 11, 19);
-
-
-	setPrms(Normal, 90, 22, 7.5, 15.50, 0, 0, 0.0954446792602539, 2, 300);
-	setPrms3(Normal, 11, 18.25);
+void inputNaiperTurnAll500_2() {
+	setPrms(Normal, 90, 43.5, 15.5, 24.50, 0, 0, 0.11323165893554688, 2, 500);
+	setPrms3(Normal, 15.5, 24.5);
 }
 
-void inputNaiperTurnAll500() {
+void inputNaiperTurnAll1200() {
 	setPrms(Large, 90, 60.0, 8.0, 15.0, 0, 0, 0.1234884262084961, 4, 500);
 	setPrms3(Large, 6, 15);
 	setPrms(Orval, 180, 43.0, 15.0, 5.0, 0, 0, 0.1770000457763672, 4, 500);
@@ -129,7 +121,7 @@ void inputNaiperTurnAll500() {
 	setPrms3(Dia90, 3.5, 0);
 }
 
-void inputNaiperTurnAll700() {
+void inputNaiperTurnAll1500() {
 	setPrms(Large, 90, 60.0, 6.5, 15.0, 0, 0, 0.08820629119873047, 4, 700);
 	setPrms3(Large, 7, 15);
 	setPrms(Orval, 180, 49.0, 15.0, 5.0, 0, 0, 0.14406967163085938, 4, 700);
@@ -233,8 +225,8 @@ void sla3(float vMax) {
 	float maxVelocity = vMax;
 	float accele = 6000;
 	float diaccele = 6000;
-	inputNaiperTurnAll700();
-	char RorL = selectGoal() == 7 ? R : L;
+	inputNaiperTurnAll1500();
+	char RorL = eigherRightLeft() == Right ? R : L;
 
 	motionCheck();
 	cmt_wait(500);
@@ -243,7 +235,7 @@ void sla3(float vMax) {
 	readGyroParam();
 	readVelocityGain();
 
-	if (vMax > 499) {
+	if (vMax > 1200) {
 		startVacume2(95);
 //		cmt_wait(500);
 	}
@@ -265,6 +257,9 @@ void sla3(float vMax) {
 	setPrms(Dia90, 90, 40.0, 10, 5.0, 0, 0, 0.08232593536376953, 4, 500);
 	setPrms3(Dia90, 3.5, 0);
 
+	setPrms(Normal, 90, 43.5, 15.5, 24.50, 0, 0, 0.11323165893554688, 2, 500);
+	setPrms3(Normal, 5.5, 43.25);
+
 	save();
 
 	running2(maxVelocity, accele, 200, 1);
@@ -274,8 +269,8 @@ void sla3(float vMax) {
 	cc = 1;
 	logs = 0;
 
-	wallOff(RorL);
-	slalom3(RorL, Large, vMax, vMax, 0);
+//	wallOff(RorL);
+	slalom3(RorL, Normal, vMax, vMax, 0);
 //	wallOff(RorL == R ? L : R);
 //	slalom3(RorL == R ? L : R, Dia45, vMax, vMax, 0);
 	cc = 0;
@@ -288,10 +283,10 @@ void sla3(float vMax) {
 }
 void testNormalSlalom(float vMax) {
 	float maxVelocity = vMax;
-	float accele = 2000;
-	float diaccele = 2000;
-	inputNaiperTurnAll700();
-	char RorL = selectGoal() == 7 ? R : L;
+	float accele = 4000;
+	float diaccele = 4000;
+	inputNaiperTurnAll1500();
+	char RorL = eigherRightLeft() == Right ? R : L;
 
 	motionCheck();
 	cmt_wait(500);
@@ -305,24 +300,32 @@ void testNormalSlalom(float vMax) {
 	Gy.error_old = 0;
 	mode_FF = 1;
 	changeMode(true);
-	inputNaiperTurnAll700();
+	inputNaiperTurnAll1500();
 
-	setPrms(Normal, 90, 22, 7.5, 15.50, 0, 0, 0.0954446792602539, 2, 300);
-	setPrms3(Normal, 11, 18.25);
+	setPrms(Normal, 90, 43.5, 6.75, 38.50, 0, 0, 0.11323165893554688, 2, 500);
+	setPrms3(Normal, 5.5, 43.25);
+
 	save();
 
-	running2(maxVelocity, accele, 180, 1);
+//	running2(maxVelocity, accele, 360, 1);
+	realRun(vMax, accele, diaccele, 180.0 * 0.5, vMax);
 	gyroOn = 0;
 	logs = 0;
 	time = 0;
 	cc = 1;
 	logs = 0;
-//
-//	frontCtrl();
-//	resetAllData();
-//	mtu_stop2();
-//	ledOn = 1;
 
+	frontCtrl();
+	resetAllData();
+	mtu_stop2();
+	ledOn = 1;
+//	while (1) {
+//		myprintf("%f %f %d %d %f %f  \r\n", LF_SEN1.now, RF_SEN1.now,
+//				LF_SEN1.now < FRONT_CTRL_L, RF_SEN1.now < FRONT_CTRL_R,
+//				FRONT_CTRL_L, FRONT_CTRL_R);
+//		cmt_wait(10);
+//	}
+//		printSensor();
 	slalom3(RorL, Normal, vMax, vMax, 0);
 //	slalom3(RorL == R ? L : R, Normal, vMax, vMax, 0);
 //	slalom3(RorL == R ? L : R, Normal, vMax, vMax, 0);
@@ -341,8 +344,8 @@ void testWallOff(float vMax) {
 	float accele = 2000;
 	float diaccele = 2000;
 
-	inputNaiperTurnAll700();
-	char RorL = selectGoal() == 7 ? R : L;
+	inputNaiperTurnAll1500();
+	char RorL = eigherRightLeft() == Right ? R : L;
 
 	motionCheck();
 	cmt_wait(500);
@@ -361,8 +364,8 @@ void testWallOff(float vMax) {
 	dia = 1;
 
 	changeMode(true);
-	realRun(maxVelocity, accele, diaccele, 90.0 * 1.22, vMax);
-//	running2(maxVelocity, accele, 180, 1);
+//	realRun(maxVelocity, accele, diaccele, 90.0 * 1.22, vMax);
+	running2(maxVelocity, accele, 180, 1);
 	gyroOn = 0;
 	logs = 0;
 	time = 0;
@@ -370,6 +373,8 @@ void testWallOff(float vMax) {
 	logs = 0;
 	wallOff(RorL);
 	cc = 0;
+	V_now = 0;
+	cmt_wait(1000);
 //	realRun(vMax, accele, diaccele, 45.0 * 1, 50);
 	mtu_stop2();
 	stopVacume();
@@ -381,7 +386,7 @@ void testWallOffSeach(float vMax) {
 	float accele = 2000;
 	float diaccele = 2000;
 
-	inputNaiperTurnAll700();
+	inputNaiperTurnAll1500();
 
 	motionCheck();
 	cmt_wait(500);
@@ -397,7 +402,7 @@ void testWallOffSeach(float vMax) {
 //	dia = 1;
 
 	changeMode(true);
-	realRun(maxVelocity, accele, diaccele, 45, vMax);
+	realRun(maxVelocity, accele, diaccele, 180, vMax);
 	cc = 1;
 	running2(maxVelocity, accele, 200, 1);
 	gyroOn = 0;
@@ -412,19 +417,20 @@ void testWallOffSeach(float vMax) {
 	cmt_wait(500);
 	logOutPut();
 }
+
 void testRoll(char r) {
 	char a = 0;
-	r = selectGoal() == 7 ? R : L;
+	r = eigherRightLeft() == Right ? R : L;
 	gyroZeroCheck(true);
 
-	for (a = 0; a < 5 * 1; a++) {
+	for (a = 0; a < 1 * 1; a++) {
 		cmt_wait(150);
 		cc = 1;
 //		gyroRoll(L, 180, 60, 80);
 //		gyroRoll(r, 180 * 2 * 1, 10, 15);
 //		gyroRoll(r, 180 * 2 * 1, 60, 20);
-		gyroRollTest(r, 180 * 2 * 1, 10, 5);
-//		gyroRoll(r == R ? L : R, 180 * 0.5 * 1, 20, 25);
+//		gyroRollTest(r, 180 * 2 * 1, 15, 7);
+		gyroRoll(r == R ? L : R, 180 * 2 * 1, 20, 25);
 //		cmt_wait(250);
 //		gyroZeroCheck(false);
 		cc = 0;
@@ -530,42 +536,55 @@ void testVacume2(int duty) {
 	readVelocityGain();
 	resetGyroParam();
 	startVacume2(duty);
-	cmt_wait(15000);
+//	cmt_wait(15000);
+	for (int i = 0; i < 200; i++) {
+		myprintf("%d %f \r\n", (int) (FAN_AMP / battery * FAN_CYCLE), battery);
+		cmt_wait(100);
+
+	}
 	stopVacume();
 	mtu_stop();
 }
 char switchOn() {
 	return !Swich;
 }
+
+char modeCheck() {
+	char swTop = !PushTop;
+	char swBottom = !PushBottom;
+	char swRight = !PushRight;
+	char swLeft = !PushLeft;
+	char swCenter = !PushCenter;
+	return swTop + swBottom * 2 + swLeft * 4 + swRight * 8 + swCenter * 16;
+}
 char encorderOperation() {
-	volatile char mode = 0;
+	volatile signed char mode = SEARCH;
 	os_escape = 0;
 	MTU1.TCNT = 4500;
 	MTU2.TCNT = 30000;
 	MTU.TSTRA.BIT.CST4 = 0;
 	while (1) {
-		if (MTU1.TCNT < MODE1) {
-			mode = SEARCH;
+		char swTop = !PushTop;
+		char swBottom = !PushBottom;
+		char swRight = !PushRight;
+		char swLeft = !PushLeft;
+		char swCenter = !PushCenter;
+
+		if (mode == SEARCH) {
 			led(1, 0, 0);
-		} else if (MTU1.TCNT < MODE2) {
-			mode = SEARCH2;
+		} else if (mode == SEARCH2) {
 			led(0, 1, 0);
-		} else if (MTU1.TCNT < MODE3) {
-			mode = RUN;
+		} else if (mode == RUN) {
 			led(1, 1, 0);
-		} else if (MTU1.TCNT < MODE4) {
-			mode = RUN2;
+		} else if (mode == RUN2) {
 			led(0, 0, 1);
-		} else if (MTU1.TCNT < MODE5) {
-			mode = RUN3;
+		} else if (mode == RUN3) {
 			led(1, 0, 1);
-		} else if (MTU1.TCNT < MODE6) {
-			mode = RUN4;
+		} else if (mode == RUN4) {
 			led(0, 1, 1);
-		} else if (MTU1.TCNT < MODE7) {
-			mode = RUN5;
+		} else if (mode == RUN5) {
 			led(1, 1, 1);
-		} else if (MTU1.TCNT < MODE8) {
+		} else if (mode == CONFIG) {
 			mode = CONFIG;
 			led(1, 0, 0);
 			cmt_wait(50);
@@ -573,34 +592,53 @@ char encorderOperation() {
 			cmt_wait(50);
 			led(1, 0, 0);
 			cmt_wait(50);
-		} else if (MTU1.TCNT < MODE9) {
-			mode = CONFIG2;
+		} else if (mode == CONFIG2) {
 			led(0, 1, 0);
 			cmt_wait(50);
 			led(0, 0, 0);
 			cmt_wait(50);
 			led(0, 1, 0);
 			cmt_wait(50);
-		} else if (MTU1.TCNT < MODE10) {
-			mode = CONFIG3;
+		} else if (mode == CONFIG3) {
 			led(0, 0, 1);
 			cmt_wait(50);
 			led(0, 0, 0);
 			cmt_wait(50);
 			led(0, 0, 1);
 			cmt_wait(50);
-		} else if (MTU1.TCNT < MODE11) {
-			mode = CONFIG4;
+		} else if (mode == CONFIG4) {
 			led(0, 0, 0);
 			LED6 = true;
 		}
-		if (MTU1.TCNT > OVERFLOW) {
-			MTU1.TCNT = MODE1 - 2000;
+		myprintf("%d %d %d %d %d	%d\r\n", swTop, swLeft, swRight, swBottom,
+				swCenter, mode);
+		cmt_wait(10);
+		if (swTop || swBottom) {
+			if (swTop) {
+				mode++;
+				if (mode > CONFIG4) {
+					mode = 0;
+				}
+			}
+			if (swBottom) {
+				mode--;
+				if (mode < 0) {
+					mode = CONFIG4;
+				}
+			}
+			for (int i = 0; i < 60000; i++)
+				;
 		}
-		if (MTU1.TCNT < UNDERFLOW) {
-			MTU1.TCNT = MODE10 + 2000;
-		}
-		if (!Swich) {
+
+		while (swTop || swBottom) {
+			swTop = !PushTop;
+			swBottom = !PushBottom;
+			swRight = !PushRight;
+			swLeft = !PushLeft;
+			swCenter = !PushCenter;
+		};
+
+		if (swCenter) {
 			os_escape = 1;
 			decide(250);
 			led(1, 1, 1);
@@ -712,7 +750,7 @@ volatile void action2(char mode, char goalX, char goalY) {
 		makePath(goalX, goalY, isFull);
 		inputNaiperTurnAll1900();
 		save();
-		inputNaiperTurnAll700();
+		inputNaiperTurnAll1500();
 		save2();
 		runForPath(4700, 20000, 22000);
 	} else if (mode == SEARCH2) {
@@ -722,7 +760,7 @@ volatile void action2(char mode, char goalX, char goalY) {
 		makePath(goalX, goalY, isFull);
 		inputNaiperTurnAll1900();
 		save();
-		inputNaiperTurnAll700();
+		inputNaiperTurnAll1500();
 		save2();
 		runForPath(4800, 18000, 22000);
 	} else if (mode == RUN) {
@@ -732,7 +770,7 @@ volatile void action2(char mode, char goalX, char goalY) {
 		}
 		inputNaiperTurnAll1900();
 		save();
-		inputNaiperTurnAll700();
+		inputNaiperTurnAll1500();
 		save2();
 		runForPath(4900, 18000, 22000);
 	} else if (mode == RUN2) {
@@ -745,7 +783,7 @@ volatile void action2(char mode, char goalX, char goalY) {
 				2000);
 		setPrms3(Orval, 35, 0);
 		save();
-		inputNaiperTurnAll700();
+		inputNaiperTurnAll1500();
 		save2();
 		runForPath(4900, 18000, 22000);
 	} else if (mode == RUN3) {
@@ -758,7 +796,7 @@ volatile void action2(char mode, char goalX, char goalY) {
 				2000);
 		setPrms3(Orval, 35, 0);
 		save();
-		inputNaiperTurnAll700();
+		inputNaiperTurnAll1500();
 		save2();
 		runForPath(5000, 18000, 22000);
 	} else if (mode == RUN4) {
@@ -814,7 +852,7 @@ char action(char mode, char goalX, char goalY, char fastMode) {
 		x = 0;
 		y = 0;
 		cirquitMode = 0;
-		inputNaiperTurnAll300();
+		inputNaiperTurnAll500_2();
 		save();
 		pathClear();
 		char res = Adachi2(goalX, goalY, Zentansaku, isFull);
@@ -826,51 +864,51 @@ char action(char mode, char goalX, char goalY, char fastMode) {
 		x = 0;
 		y = 0;
 		cirquitMode = 0;
-		inputNaiperTurnAll300();
+		inputNaiperTurnAll500_2();
 		save();
 		pathClear();
 		char res = Adachi2(goalX, goalY, m2, isFull);
 		return res;
 	} else if (mode == RUN) {
 		makePath(goalX, goalY, isFull);
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save2();
 		char check = runForPath(500, 3000, 3000);
 	} else if (mode == RUN2) {
 		makePath(goalX, goalY, isFull);
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save2();
 		char check = runForPath(700, 3000, 3000);
 	} else if (mode == RUN3) {
 		makePath(goalX, goalY, isFull);
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save2();
 		char check = runForPath(800, 3000, 3000);
 	} else if (mode == RUN4) {
 		makePath(goalX, goalY, isFull);
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save2();
 		char check = runForPath(900, 3000, 3000);
 	} else if (mode == RUN5) {
 		makePath(goalX, goalY, isFull);
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save2();
 		char check = runForPath(1000, 3000, 3000);
 	} else if (mode == CONFIG) {
 		makePath(goalX, goalY, isFull);
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save();
-		inputNaiperTurnAll500();
+		inputNaiperTurnAll1200();
 		save2();
 		char check = runForPath(500, 3000, 3000);
 		save2();
@@ -884,8 +922,7 @@ char action(char mode, char goalX, char goalY, char fastMode) {
 	} else if (mode == CONFIG3) {
 		printSensor();
 	} else if (mode == CONFIG4) {
-//		resetMap();
-//		resetFull();
+//		printSensor
 	}
 	mtu_stop2();
 //	TRANSAM = false;
@@ -983,8 +1020,8 @@ void test12() {
 	ledOn = false;
 }
 void operation() {
-	volatile char goalX = 5; // selectGoal();
-	volatile char goalY = 6; //selectGoal();
+	volatile char goalX = 1; // selectGoal();
+	volatile char goalY = 0; //selectGoal();
 
 	if (goalChangeFlg == 1) {
 		goalX = selectGoal();
@@ -993,14 +1030,17 @@ void operation() {
 	global_goal_x = goalX;
 	global_goal_y = goalY;
 
-	printSensor();
+//	while (true) {
+//		encorderOperation();
+//	}
+//	printSensor();
 //	testRun();
 //	keepZeroPoint();
 //	testRoll(L);
 //	testWallOff(200);
-//	testWallOffSeach(300);
-//	testNormalSlalom(300);
-//	sla3(500);
+//	testWallOffSeach(500);
+//	testNormalSlalom(500);
+	sla3(500);
 //	inputData2();
 //	testVacume2(90);
 //	testWallOff();
@@ -1008,6 +1048,7 @@ void operation() {
 //	cirquit();
 //	checkMemory(goalX, goalY);
 //	cirquit();
+
 	while (1) {
 		int res = action(encorderOperation(), goalX, goalY, false);
 		mtu_stop2();

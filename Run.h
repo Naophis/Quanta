@@ -200,12 +200,12 @@ char gyroRollTest(char RorL, float Angle, float w_max, float al) {
 	while (ABS(ang) < ABS(Angle)) {
 		float sita = ABS((W_now + targetWo) * (W_now - targetWo) / (2.0 * al));
 		if (phase == 3) {
-			angle = RorL == L ? -Angle : Angle;
+//			angle = RorL == L ? -Angle : Angle;
 		} else if (phase == 2) {
 			if (ABS(W_now) < Wo) {
 				alpha = 0;
 				W_now = RorL == L ? -Wo : Wo;
-				angle = RorL == L ? -Angle : Angle;
+//				angle = RorL == L ? -Angle : Angle;
 				phase = 3;
 			}
 		} else if (ABS(Angle) <= ABS(angle) + ABS(sita)) {
@@ -590,9 +590,6 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 	cc = 1;
 	slaTerm = time;
 	while (1) {
-//		cmt_wait(25);
-//		myprintf("%f	%f	%f	%f\r\n", radius, rad, time, angle);
-
 		if (!fail) {
 			positionControlValueFlg = 0;
 			runFlg = 0;
@@ -608,9 +605,9 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 			omegaTemp = 0;
 			W_now = 0;
 			if (RorL == R) {
-				angle = -rad;
-			} else {
 				angle = rad;
+			} else {
+				angle = -rad;
 			}
 			break;
 		}
@@ -949,8 +946,8 @@ char running2(float vmax, float ACC, float dist, char control) {
 	V_max = vmax;
 //	G.th = gyroTh_R;
 	runFlg = 1;
-	char bool2 = checkSensorOff(R, false);
-	char bool3 = checkSensorOff(L, false);
+	char bool2 = checkSensor2Off(R, false);
+	char bool3 = checkSensor2Off(L, false);
 	char bool = bool2 | bool3;
 
 	while (distance < dist) {
@@ -971,20 +968,22 @@ char running2(float vmax, float ACC, float dist, char control) {
 		}
 		if (bool) {
 			if (bool2) {
-				if (checkSensorOff(R, false)) {
+				if (checkSensor2Off(R, false)) {
 				} else {
 					bool = false;
 					distance = 0;
-					dist = 30 + 8.750;
+					dist = 30 + 10.0;
+//					mtu_stop();
 					continue;
 				}
 			}
 			if (bool3) {
-				if (checkSensorOff(L, false)) {
+				if (checkSensor2Off(L, false)) {
 				} else {
 					bool = false;
 					distance = 0;
-					dist = 30 + 4.750;
+					dist = 30 + 7.50;
+//					mtu_stop();
 					continue;
 				}
 			}

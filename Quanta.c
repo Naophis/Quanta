@@ -42,6 +42,8 @@
 //#include "myFlash.h"
 
 #include "Setting.h"
+#include "Mram.h"
+
 #include "OperationSystem.h"
 #include "SerialMapper.h"
 
@@ -63,22 +65,11 @@ volatile void cmt() {
 	timer++;
 	time++;
 	sinCount++;
-//	if ((buzzerTimer % 2) == 0) {
-//		PORTC.PODR.BIT.B6 = 1;
-//	} else {
-//		PORTC.PODR.BIT.B6 = 0;
-//	}
 	swTop = !PushTop;
 	swBottom = !PushBottom;
 	swRight = !PushRight;
 	swLeft = !PushLeft;
 	swCenter = !PushCenter;
-
-	if (swTop) {
-		GPT.GTSTR.BIT.CST2 = 1;
-	} else {
-		GPT.GTSTR.BIT.CST2 = 0;
-	}
 
 	Physical_Basement();
 	if (logs < L_Length && cc == 1) {
@@ -99,7 +90,7 @@ volatile void cmt() {
 			log14[logs] = (angle * 180 / PI);
 			log15[logs] = (V_Enc.r);
 			log16[logs] = (V_Enc.l);
-			log17[logs] = (float) (MTU2.TCNT);
+			log17[logs] = (float) (alpha);
 			log18[logs] = (float) (MTU1.TCNT);
 			logs++;
 
@@ -166,10 +157,10 @@ void mtu4_A() {
 
 void getBattery() {
 	if (BATTERY != 0) {
-		battery = 0.1 * (3.3f * BATTERY / 4096 / (1.0 - 75.0 / 105))
+		battery = 0.1 * (3.3f * BATTERY / 4096 / (1.0 - 7.5 / (3.0 / 4 + 7.5)))
 				+ 0.9 * batteryOld;
 	} else {
-		battery = 3.3f * BATTERY / 4096 / (1.0 - 75.0 / 105);
+		battery = 3.3f * BATTERY / 4096 / (1.0 - 7.5 / (3.0 / 4 + 7.5));
 	}
 	batteryOld = battery;
 }
@@ -191,13 +182,18 @@ void mtu4_B() {
 		break;
 	case 4:
 //		sensing_side_right();
-		getBattery();
+//		getBattery();
 
-//		if (fanStart) {
-//			GPT2.GTCCRA = GPT2.GTCCRC = (int) (FAN_AMP / battery * FAN_CYCLE);
-//		} else {
-//			GPT2.GTCCRA = GPT2.GTCCRC = 0;
-//		}
+		if (fanStart) {
+			if ((FAN_AMP / battery) <= FAN_CYCLE) {
+				GPT2.GTCCRA = GPT2.GTCCRC =
+						(int) (FAN_AMP / battery * FAN_CYCLE);
+			} else {
+				GPT2.GTCCRA = GPT2.GTCCRC = FAN_CYCLE;
+			}
+		} else {
+			GPT2.GTCCRA = GPT2.GTCCRC = 0;
+		}
 
 		gyros[3] = getMpuData();
 		RS_SEN1.old = RS_SEN1.now;
@@ -206,10 +202,6 @@ void mtu4_B() {
 		LF_SEN1.old = LF_SEN1.now;
 
 		getSensorData();
-//		RS_SEN1.now = RS_SEN1.on - RS_SEN1.off;
-//		LS_SEN1.now = LS_SEN1.on - LS_SEN1.off;
-//		RF_SEN1.now = RF_SEN1.on - RF_SEN1.off;
-//		LF_SEN1.now = LF_SEN1.on - LF_SEN1.off;
 
 		float tmpGyros = (gyros[0] + gyros[1] + gyros[2] + gyros[3]) / 4;
 		settleGyro2 = (G.ref - tmpGyros) * G.th;
@@ -245,6 +237,18 @@ void mtu4_B() {
 		sen_l[2] = sen_l[1];
 		sen_l[1] = sen_l[0];
 		sen_l[0] = LS_SEN1.now > L_WALL3;
+
+		sen_r2[4] = sen_r2[3];
+		sen_r2[3] = sen_r2[2];
+		sen_r2[2] = sen_r2[1];
+		sen_r2[1] = sen_r2[0];
+		sen_r2[0] = RS_SEN2.now > R_WALL4;
+
+		sen_l2[4] = sen_l2[3];
+		sen_l2[3] = sen_l2[2];
+		sen_l2[2] = sen_l2[1];
+		sen_l2[1] = sen_l2[0];
+		sen_l2[0] = LS_SEN2.now > L_WALL4;
 		break;
 	}
 	sensor_led_off();
@@ -268,22 +272,6 @@ void initRX64M() {
 void test() {
 	ComFlag = true;
 }
-unsigned char wall[16][16];
-unsigned char wall2[16][16] = { { 14, 6, 4, 6, 4, 6, 6, 4, 5, 12, 4, 6, 4, 6, 4,
-		7 }, { 12, 5, 9, 12, 2, 4, 7, 9, 8, 3, 10, 7, 10, 7, 10, 5 }, { 9, 10,
-		3, 8, 7, 10, 7, 11, 10, 5, 12, 6, 6, 6, 4, 3 }, { 10, 4, 7, 8, 7, 12, 5,
-		12, 5, 9, 10, 4, 6, 4, 0, 7 }, { 14, 0, 7, 10, 5, 9, 9, 9, 9, 9, 12, 2,
-		4, 1, 8, 7 }, { 12, 2, 4, 7, 9, 9, 10, 3, 9, 9, 9, 12, 3, 11, 11, 13 },
-		{ 8, 4, 0, 7, 9, 9, 14, 6, 2, 3, 10, 2, 6, 6, 6, 1 }, { 11, 11, 8, 5, 9,
-				10, 5, 12, 4, 4, 7, 12, 6, 6, 5, 9 }, { 12, 4, 3, 10, 2, 7, 9,
-				10, 3, 10, 6, 1, 13, 12, 3, 9 }, { 9, 8, 5, 12, 6, 5, 9, 12, 6,
-				6, 6, 3, 8, 3, 12, 1 }, { 9, 11, 11, 9, 12, 3, 9, 9, 12, 6, 6,
-				4, 3, 12, 3, 9 }, { 9, 12, 5, 9, 8, 6, 3, 9, 9, 14, 4, 3, 12, 3,
-				12, 3 },
-		{ 9, 9, 10, 3, 9, 12, 6, 3, 9, 12, 3, 12, 0, 7, 10, 5 }, { 9, 9, 12, 6,
-				3, 9, 12, 7, 8, 3, 12, 3, 11, 13, 14, 1 }, { 8, 3, 9, 14, 5, 8,
-				1, 12, 3, 12, 3, 14, 4, 2, 5, 9 }, { 11, 14, 2, 6, 2, 3, 11, 10,
-				6, 2, 6, 6, 2, 7, 10, 3 } };
 
 void main(void) {
 	initRX64M();
@@ -291,12 +279,6 @@ void main(void) {
 	setupCmt = true;
 	enableMPU = true;
 	os_escape = true;
-
-//	PORTA.PODR.BIT.B7 = 1;
-//	PORTB.PODR.BIT.B6 = 1;
-//	PORTB.PODR.BIT.B7 = 1;
-//	PORTB.PODR.BIT.B5 = 1;
-//	PORT5.PODR.BIT.B2 = 1;
 
 	while (1) {
 		float result = getZeroPoint();
@@ -306,12 +288,8 @@ void main(void) {
 		} else {
 			break;
 		}
-//		cmt_wait(100);
-//		myprintf("%d %d %d %d %d %f %f	", PushTop, PushBottom, PushRight,
-//		PushLeft,
-//		PushCenter, V_Enc.l, V_Enc.r);
-//		myprintf("hello world %f\r\n", G.now);
 	}
+	coin(100);
 	ledOn = 1;
 	os_escape = 1;
 
@@ -330,18 +308,4 @@ void main(void) {
 
 	operation();
 	os_escape = 0;
-	while (1) {
-		if (!Swich) {
-			clearLogs();
-			distance = 0;
-			ang = angle = 0;
-		}
-		myprintf("%f	%f	%d	%d\r\n", ang * 180 / PI, angle * 180 / PI, MTU1.TCNT,
-		MTU2.TCNT);
-//		myprintf("%f	%f	%d	%d	\r\n", V_Enc.l, V_Enc.r, MTU2.TCNT, MTU1.TCNT);
-//		myprintf("%f	%f	%f	%f	", logL[0], logL[1], logL[2], logL[3]);
-//		myprintf("%f	%f	%f	%f\r\n", logR[0], logR[1], logR[2], logR[3]);
-
-		cmt_wait(50);
-	}
 }

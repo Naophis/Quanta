@@ -7,7 +7,30 @@
 
 #ifndef UTIL_H_
 #define UTIL_H_
-
+char eigherRightLeft() {
+	char res;
+	char flag = false;
+	LED_RIGHT = LED_LEFT = true;
+	while (true) {
+		if (!PushLeft) {
+			res = Left;
+			flag = true;
+			LED_RIGHT = false;
+			LED_LEFT = true;
+		}
+		if (!PushRight) {
+			res = Right;
+			flag = true;
+			LED_RIGHT = true;
+			LED_LEFT = false;
+		}
+		if (!PushCenter && flag) {
+			break;
+		}
+	}
+	LED_RIGHT = LED_LEFT = false;
+	return res;
+}
 char selectGoal();
 void resetData2() {
 	ang = 0;
@@ -84,14 +107,14 @@ void mtu_start() {
 }
 void mtu_stop() {
 	enablePWM = false;
+	cmt_wait(25);
+	GPT0.GTCCRA = GPT0.GTCCRC = GPT1.GTCCRA = GPT1.GTCCRC = 0;
+	V_now = 0;
+	W_now = 0;
 	resetGyroParam();
 	resetAngleParam();
 	resetOmegaParam();
 	resetData2();
-	V_now = 0;
-	W_now = 0;
-	cmt_wait(50);
-	GPT0.GTCCRA = GPT0.GTCCRC = GPT1.GTCCRA = GPT1.GTCCRC = 0;
 	cmt_wait(5);
 	GPT.GTSTR.BIT.CST0 = GPT.GTSTR.BIT.CST1 = 0;
 //	stopVacume();
@@ -250,10 +273,10 @@ void printSensor() {
 //				LS_SEN2.now, RS_SEN2.now, LS_SEN1.now, RS_SEN1.now, LF_SEN1.now,
 //				RF_SEN1.now);
 		myprintf(
-				"{\"battery\":%f,\"gyro\":%f,\"LS1\":%d,\"RS1\":%d,\"LF1\":%d,\"RF1\":%d,\"LS2\":%d,\"RS2\":%d}\r\n",
+				"{\"battery\":%f,\"gyro\":%f,\"LS1\":%d,\"RS1\":%d,\"LF1\":%d,\"RF1\":%d,\"LS2\":%d,\"RS2\":%d,\"BATT\":%d}\r\n",
 				battery, settleGyro, (int) LS_SEN1.now, (int) RS_SEN1.now,
 				(int) LF_SEN1.now, (int) RF_SEN1.now, (int) LS_SEN2.now,
-				(int) RS_SEN2.now
+				(int) RS_SEN2.now, BATTERY
 
 				);
 		cmt_wait(50);
@@ -299,8 +322,8 @@ void checkIsoukeisu() {
 				(int) (ang * 180 / PI));
 	}
 }
-#define CHECK_ORDER_RIGHT 400
-#define CHECK_ORDER_LEFT 460
+#define CHECK_ORDER_RIGHT 800
+#define CHECK_ORDER_LEFT 800
 char motionCheck() {
 	int tmp = sensingMode;
 	sensingMode = SearchMode;
@@ -382,7 +405,7 @@ void keepZeroPoint() {
 	readGyroParam();
 	readVelocityGain();
 //	resetGyroParam();
-	mtu_start();
+//	mtu_start();
 //	positionControlValueFlg = 1;
 	ang = 0;
 	angle = 0;
@@ -398,7 +421,7 @@ void keepZeroPoint() {
 		myprintf("%f 		%f\r\n", LF_SEN1.now, RF_SEN1.now);
 		myprintf("Duty:	%f	%f\r\n", Duty_l, Duty_r);
 		myprintf("Velocity:	%f	%f\r\n", V_Enc.l, V_Enc.r);
-		myprintf("angle:	%f\r\n", ang);
+		myprintf("angle:	%f\r\n", ang * 180 / PI);
 //		myprintf(
 //				"{\"mode\":%d,\"battery\":%f,\"gyro\":%f,\"LS1\":%f,\"RS1\":%f,\"LF1\":%f,\"RF1\":%f}\r\n",
 //				ledOn, battery, settleGyro, LS_SEN1.now, RS_SEN1.now,

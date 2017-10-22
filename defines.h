@@ -45,15 +45,15 @@ volatile char enableMPU = false;
 float battery, batteryOld;
 char fanStart = false;
 char fanStart2 = false;
-#define FAN_AMP2 2.75
-#define FAN_AMP 2.50
+#define FAN_AMP2 10.50
+#define FAN_AMP 10.50
 const float PI = 3.141592653589793;
 
 #define TRANSAM PORT1.PODR.BIT.B5
 double dt = 0.001 / 4;
 #define ABS(IN) ((IN) < 0 ? - (IN) : (IN))
 #define Vo 0.0f				//初速度
-#define Wo 0.05f			//初期角速度
+#define Wo 0.15f			//初期角速度
 #define W_max 25.0f
 //#define W_max 5.5f
 volatile double W_now = 0;
@@ -277,7 +277,7 @@ volatile vector_map m[MAZE_SIZE][MAZE_SIZE];
 
 #define Q_LENGTH 2048
 int que[Q_LENGTH][3];
-#define L_Length 3000
+#define L_Length 2000
 volatile int log1[L_Length];
 volatile float logs2[L_Length];
 volatile float log3[L_Length];
