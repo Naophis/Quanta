@@ -49,13 +49,14 @@ typedef struct {
 	float error_old;
 	float error_delta;
 } t_Errors;
-volatile t_Errors Se, Vr, Vl, Gy, Velocity, W_enc, Wl, Angle;
+volatile t_Errors Se, Se2, Vr, Vl, Gy, Velocity, W_enc, Wl, Angle;
 typedef struct {
 	float Kp;
 	float Ki;
 	float Kd;
 } t_PID;
-volatile t_PID Vel_r, Vel_l, Gyro, Sen, Sen_Dia, Vel, Omega, Angles;
+volatile t_PID Vel_r, Vel_l, Gyro, Sen, Sen_Dia, Sen_Dia_Side, Vel, Omega,
+		Angles;
 typedef struct {
 	float r;
 	float l;
@@ -65,6 +66,7 @@ typedef struct {
 	float s;
 	float g;
 	float angles;
+	float s2;
 } t_Control;
 volatile t_Control C;
 

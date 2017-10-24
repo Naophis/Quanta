@@ -103,7 +103,7 @@ char checkUp2(char RorL) {
 	}
 }
 char checkDown2(char RorL) {
-	return false;
+//	return false;
 	if (RorL == R) {
 		return (RS_SEN1.now > existRightWall2) && (sen_log_r[0] < sen_log_r[1])
 				&& (sen_log_r[1] < sen_log_r[2])
@@ -124,6 +124,8 @@ char running(float vmax, float ACC, float dist, char control) {
 	} else {
 		readGyroParam();
 	}
+
+	errorOld_dia = errorOld_dia_side = 0;
 	readGyroParam();
 	readAngleParam();
 	readOmegaParam();
@@ -698,10 +700,10 @@ void front(float vmax, float ACC, float dist, char control) {
 #define DIACCELE 2
 #define FIX 3
 
-#define R_over_side 300
-#define L_over_side 300
-#define R_over_front 200
-#define L_over_front 200
+#define R_over_side 700
+#define L_over_side 1100
+#define R_over_front 600
+#define L_over_front 600
 
 char checkStablly() {
 	char flg = false;
@@ -732,6 +734,7 @@ char asc2(float d, float d2) {
 char orignalRun(float v1, float v2, float ac, float diac, float dist) {
 	float d2;
 	char sequence = ACCELE;
+	errorOld_dia = errorOld_dia_side = 0;
 	targetVelocity = v2;
 	positionControlValueFlg = 1;
 	acc = ac;
@@ -932,6 +935,7 @@ char running2(float vmax, float ACC, float dist, char control) {
 		readGyroParam();
 	}
 
+	errorOld_dia = errorOld_dia_side = 0;
 //	sensingMode = AtackStraight;
 	readGyroParam();
 

@@ -15,7 +15,8 @@
 
 char wallOff(char RorL);
 char wallOff_D(char RorL);
-#define wall_off_limit 40
+volatile int wall_off_limit = 40;
+volatile int wall_off_limit_d = 40;
 char wallOff(char RorL) {
 	if (dia == 1) {
 		return wallOff_D(RorL);
@@ -28,24 +29,24 @@ char wallOff(char RorL) {
 	char up = false;
 	if (RorL == R) {
 		while (SEN_R < R_WALL_OFF && distance <= wall_off_limit) {
-			if (!up) {
-				up = checkUp(R);
-			} else {
-				if (checkDown(R)) {
-					positionControlValueFlg = 0;
-					return true;
-				}
-			}
+//			if (!up) {
+//				up = checkUp(R);
+//			} else {
+//				if (checkDown(R)) {
+//					positionControlValueFlg = 0;
+//					return true;
+//				}
+//			}
 			if (!fail) {
 				positionControlValueFlg = 0;
 				break;
 			}
 		}
 		while (SEN_R > R_WALL_OFF && distance <= wall_off_limit) {
-			if (checkDown2(R)) {
-				positionControlValueFlg = 0;
-				return true;
-			}
+//			if (checkDown2(R)) {
+//				positionControlValueFlg = 0;
+//				return true;
+//			}
 //			if (checkDown3(R)) {
 //				positionControlValueFlg = 0;
 //				return true;
@@ -57,24 +58,24 @@ char wallOff(char RorL) {
 		}
 	} else {
 		while (SEN_L < L_WALL_OFF && distance <= wall_off_limit) {
-			if (!up) {
-				up = checkUp(L);
-			} else {
-				if (checkDown(L)) {
-					positionControlValueFlg = 0;
-					return true;
-				}
-			}
+//			if (!up) {
+//				up = checkUp(L);
+//			} else {
+//				if (checkDown(L)) {
+//					positionControlValueFlg = 0;
+//					return true;
+//				}
+//			}
 			if (!fail) {
 				positionControlValueFlg = 0;
 				break;
 			}
 		}
 		while (SEN_L > L_WALL_OFF && distance <= wall_off_limit) {
-			if (checkDown2(L)) {
-				positionControlValueFlg = 0;
-				return true;
-			}
+//			if (checkDown2(L)) {
+//				positionControlValueFlg = 0;
+//				return true;
+//			}
 //			if (checkDown3(L)) {
 //				positionControlValueFlg = 0;
 //				return true;
@@ -88,7 +89,6 @@ char wallOff(char RorL) {
 	positionControlValueFlg = 0;
 	return 1;
 }
-#define wall_off_limit_d 40
 char wallOff_D(char RorL) {
 //	positionCoontrolValueFlg = 1;
 	ang = 0;

@@ -146,7 +146,60 @@ float check_sen_error(void) {
 int gyroReset = 0;
 
 volatile char isControl = 0;
-//TODO 左側も
+volatile int errorOld_dia = 0;
+volatile int errorOld_dia_side = 0;
+
+int check_sen_error_dia_side(void) {
+	int error = 0;
+	char check = 0;
+	if (ABS(RS_SEN1.now - RS_SEN1.old) < KIREME_R_DIA_SIDE) {
+		if (RS_SEN1.now > RS_WALL2) {
+			error += RS_SEN1.now - RS_SEN1.ref2;
+			check++;
+		}
+	} else {
+		if (RS_SEN1.now > (RS_WALL2 + orderup_r)) {
+			error += RS_SEN1.now - RS_SEN1.ref2;
+			check++;
+		}
+	}
+	if (ABS(LS_SEN1.now - LS_SEN1.old) < KIREME_L_DIA_SIDE) {
+		if (LS_SEN1.now > LS_WALL2) {
+			error += LS_SEN1.now - LS_SEN1.ref2;
+			check++;
+		}
+	} else {
+		if (LS_SEN1.now > (LS_WALL2 + orderup_l)) {
+			error += LS_SEN1.now - LS_SEN1.ref2;
+			check++;
+		}
+	}
+
+	RS_SEN1.old = RS_SEN1.now;
+	LS_SEN1.old = LS_SEN1.now;
+
+	if (check == 0) {
+		Se2.error_old = 0;
+		error = errorOld_dia_side;
+	} else {
+	}
+	isControl = false;
+
+	if (check != 0) {
+		errorFlg = 1;
+		errorOld_dia_side = error;
+	} else {
+		errorFlg = 0;
+	}
+
+	errorOld_dia = error;
+
+	if (check == 2) {
+		return error;
+	}
+	return 2 * error;
+}
+
 int check_sen_error_dia(void) {
 	int error = 0;
 	char check = 0;
@@ -175,11 +228,39 @@ int check_sen_error_dia(void) {
 			}
 		}
 	}
+
+	if (LS_SEN1.now > L_WALL_dia) {
+		if (ABS(LF_SEN1.now - LF_SEN1.old) < KIREME_L_DIA) {
+			if (LF_SEN1.now > LF_WALL1) {
+				error += LF_SEN1.now - LF_SEN1.ref2;
+				check++;
+			}
+		} else {
+			if (LF_SEN1.now > (LF_WALL1 + orderup_l)) {
+				error += LF_SEN1.now - LF_SEN1.ref2;
+				check++;
+			}
+		}
+	} else {
+		if (ABS(LF_SEN1.now - LF_SEN1.old) < KIREME_L_DIA) {
+			if (LF_SEN1.now > LF_WALL1) {
+				error += LF_SEN1.now - LF_SEN1.ref;
+				check++;
+			}
+		} else {
+			if (LF_SEN1.now > (LF_WALL + orderup_l)) {
+				error += LF_SEN1.now - LF_SEN1.ref;
+				check++;
+			}
+		}
+	}
+
 	RF_SEN1.old = RF_SEN1.now;
 	LF_SEN1.old = LF_SEN1.now;
 
 	if (check == 0) {
 		Se.error_old = 0;
+		error = errorOld_dia;
 	} else {
 //		Gy.error_old = 0;
 //		angle = 0;
@@ -193,6 +274,9 @@ int check_sen_error_dia(void) {
 	} else {
 		errorFlg = 0;
 	}
+
+	errorOld_dia = error;
+
 	if (check == 2) {
 		return error;
 	}
@@ -204,6 +288,7 @@ float k1 = 76.25;
 float k2 = 10370;
 float P = 100;
 void errorVelocity(void) {
+	C.s2 = 0;
 	if (positionControlValueFlg == 1) {
 		if (dia == 0) {
 			Se.error_now = check_sen_error();
@@ -216,6 +301,14 @@ void errorVelocity(void) {
 			if (Se.error_now != 0) {
 				C.s = Sen_Dia.Kp * Se.error_now + Sen_Dia.Ki * Se.error_old
 						+ Sen_Dia.Kd * Se.error_delta;
+			}
+
+			Se2.error_now = check_sen_error_dia_side();
+			C.s2 = 0;
+			if (Se2.error_now != 0) {
+				C.s2 = Sen_Dia_Side.Kp * Se2.error_now
+						+ Sen_Dia_Side.Ki * Se2.error_old
+						+ Sen_Dia_Side.Kd * Se2.error_delta;
 			}
 		}
 	} else {
@@ -303,7 +396,7 @@ float FB_calc_straight() {
 }
 
 float FB_calc_pararell() {
-	return C.angles + C.g - C.s;
+	return C.angles + C.g - C.s; //- C.s2;
 }
 
 void dutyCalcuration2(void) {

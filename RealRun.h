@@ -36,11 +36,11 @@ char runForPath(float max, float ac, float diac) {
 	cmt_wait(100);
 //	back(-100, -1000, 50, 0);
 	gyroZeroCheck(false);
-	if (pLarge.velocity >= 500) {
+	if (pLarge.velocity >= 1200) {
 		TRANSAM = true;
-		LED6 = true;
-		LED1 = true;
-		startVacume2(90);
+//		LED_R = true;
+//		LED_L = true;
+		startVacume2(70);
 	}
 	turnVarys = turnVary(path_t[0]);
 	slaVelocity = turnVelocity(turnVarys);
@@ -66,10 +66,11 @@ char runForPath(float max, float ac, float diac) {
 		turnVarys = turnVary(path_t[i]);
 		slaVelocity = turnVelocity(turnVarys);
 		RorL = turnRoL(path_t[i]);
+//		myprintf("%d	%f	%f\r\n", i, dist, slaVelocity);
 		if (dist > 0 || i == 0) {
 			if (dia == 0) {
 				if (i == 0) {
-					check = realRun(max, ac, diac, (dist) * 180 + 19,
+					check = realRun(max, ac, diac, (dist) * 180 + 43,
 							slaVelocity);
 				} else {
 					check = realRun(max, ac, diac, dist * 180 + slalomDist,
@@ -180,9 +181,9 @@ char runForKnownPath(float max, float ac, float diac) {
 					if (tmp) {
 						if (dist >= 1) {
 							check = realRun(max, ac, diac,
-									dist * 180 + slalomDist - 45, slaVelocity);
+									dist * 180 + slalomDist - 90, slaVelocity);
 						}
-						check = running2(slaVelocity, ac, 90, 1);
+						check = running2(slaVelocity, ac, 120, 1);
 						tmp = false;
 					} else {
 						check = realRun(max, ac, diac, dist * 180 + slalomDist,
