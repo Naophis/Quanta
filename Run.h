@@ -235,15 +235,15 @@ char gyroRollTest(char RorL, float Angle, float w_max, float al) {
 	return 1;
 }
 char gyroRoll(char RorL, float Angle, float w_max, float al) {
-	if (RorL == R) {
+	if (RorL == L) {
 		al = -al;
 	}
 	if (ABS(w_max) > W_max) {
-		w_max = RorL == L ? -W_max : W_max;
+		w_max = RorL == R ? -W_max : W_max;
 	} else {
-		w_max = RorL == L ? -w_max : w_max;
+		w_max = RorL == R ? -w_max : w_max;
 	}
-	G.th = RorL == L ? pivotR : pivotL;
+	G.th = RorL == R ? pivotR : pivotL;
 	mtu_start();
 	alpha = al;
 	acc = 0;
@@ -259,16 +259,16 @@ char gyroRoll(char RorL, float Angle, float w_max, float al) {
 	time = 0;
 	logs = 0;
 	char phase = 0;
-	float targetWo = RorL == L ? -Wo : Wo;
+	float targetWo = RorL == R ? -Wo : Wo;
 	while (ABS(angle) < ABS(Angle)) {
 		float sita = ABS((W_now + targetWo) * (W_now - targetWo) / (2.0 * al));
 		if (phase == 3) {
-			angle = RorL == L ? -Angle : Angle;
+			angle = RorL == R ? -Angle : Angle;
 		} else if (phase == 2) {
 			if (ABS(W_now) < Wo) {
 				alpha = 0;
-				W_now = RorL == L ? -Wo : Wo;
-				angle = RorL == L ? -Angle : Angle;
+				W_now = RorL == R ? -Wo : Wo;
+				angle = RorL == R ? -Angle : Angle;
 				phase = 3;
 			}
 		} else if (ABS(Angle) <= ABS(angle) + ABS(sita)) {
@@ -430,8 +430,14 @@ char frontCtrl() {
 		while (RF_SEN1.now < FRONT_CTRL_R && LF_SEN1.now < FRONT_CTRL_L)
 			;
 		sensingMode = tmp;
-		cmtMusic(C4_, 250);
+//		cmtMusic(C4_, 250);
 	}
+	return 1;
+}
+char frontCtrl4() {
+	char tmp = sensingMode;
+	while (RF_SEN1.now < FRONT_CTRL_R4 && LF_SEN1.now < FRONT_CTRL_L4)
+		;
 	return 1;
 }
 char frontCtrl3() {
@@ -530,6 +536,9 @@ char targetRun(float vmax, float ACC, float dist, char control, char target) {
 }
 #define R_over1 400
 #define L_over1 400
+char running2(float vmax, float ACC, float dist, char control);
+char realRun3(float max, float ac, float diac, float dist, float sla);
+void back(float v1, float ac, float dist, char control);
 char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 	float radius = getRadius(type);
 	float rad = toRadians(getTargetAngle(type));
@@ -548,6 +557,39 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 	if (type == Normal) {
 		frontCtrl();
 		frontSkip = false;
+		if (RS_SEN1.now > 845 && RorL == L) {
+			realRun3(Velocity, 3500, 3500, 90, 25);
+			mtu_stop();
+			gyroRoll(L, 90, 60, 80);
+			back(-800, -2000, 50, 0);
+			cmt_wait(50);
+			mtu_start();
+			running2(Velocity, 4000, 90 + 49, 1);
+			return 1;
+		} else if (LS_SEN1.now > 1100 && RorL == R) {
+			realRun3(Velocity, 3500, 3500, 90, 25);
+			mtu_stop();
+			gyroRoll(R, 90, 60, 80);
+			back(-800, -2000, 50, 0);
+			cmt_wait(50);
+			mtu_start();
+			running2(Velocity, 4000, 90 + 49, 1);
+			return 1;
+		} else if (LF_SEN1.now > 800 || RF_SEN1.now > 800) {
+			realRun3(Velocity, 3500, 3500, 60, 40);
+			frontCtrl4();
+			mtu_start();
+			if (RorL == R) {
+				gyroRoll(R, 90, 60, 80);
+			} else {
+				gyroRoll(L, 90, 60, 80);
+			}
+			back(-800, -2000, 30, 0);
+			cmt_wait(50);
+			mtu_start();
+			running2(Velocity, 4000, 90 + 30, 1);
+			return 1;
+		}
 	}
 	float error = check_sen_error();
 	float offset = 0;
@@ -977,6 +1019,7 @@ char running2(float vmax, float ACC, float dist, char control) {
 					bool = false;
 					distance = 0;
 					dist = 30 + 10.0;
+					cmtMusic(10, 100);
 //					mtu_stop();
 					continue;
 				}
@@ -986,6 +1029,7 @@ char running2(float vmax, float ACC, float dist, char control) {
 				} else {
 					bool = false;
 					distance = 0;
+					cmtMusic(10, 100);
 					dist = 30 + 7.50;
 //					mtu_stop();
 					continue;

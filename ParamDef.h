@@ -8,7 +8,7 @@
 #ifndef PARAMDEF_H_
 #define PARAMDEF_H_
 
-#define TIRE 23.700
+#define TIRE 23.550f
 const float WHEEL = TIRE / 2000;
 const float GEAR = 63.0 / 19.0;
 #define DUTY_MAX 70.0f
@@ -78,6 +78,11 @@ float FRONT_CTRL_L = 690;	//前壁補正
 float RF_WALL_EXIST2 = 450; //前壁補正　開始
 float LF_WALL_EXIST2 = 50;   //前壁補正　開始
 
+float FRONT_CTRL_R4 = 2160;   //前壁補正
+float FRONT_CTRL_L4 = 1865;	//前壁補正
+float RF_WALL_EXIST4 = 450; //前壁補正　開始
+float LF_WALL_EXIST4 = 50;   //前壁補正　開始
+
 float wallhosei = 100;
 
 float RF_WALL = 200; //斜め時 姿勢制御閾値(壁アリ）
@@ -138,11 +143,14 @@ void importParam() {
 
 	Gyro.Kp = 0.975; //本来
 	Gyro.Ki = 0.025;
+
+	Gyro.Kp = 0.975; //本来
+	Gyro.Ki = 0.025;
 	//	Gyro.Kd = 0.0;
 
-	Sen.Kp = 0.0025;
-	Sen.Ki = 0.00075;
-	Sen.Kd = 0.0001;
+	Sen.Kp = 0.0045;
+	Sen.Ki = 0.001;
+	Sen.Kd = 0.00025;
 
 //	Sen_Dia.Kp = 0.0075;
 //	Sen_Dia_Side.Kp = 0.0025;
@@ -176,10 +184,10 @@ void importParam() {
 	RF_WALL_EXIST = 550; //探索時壁判定
 	LF_WALL_EXIST = 550; //探索時壁判定
 
-	FRONT_CTRL_R = 722;   //前壁補正
-	FRONT_CTRL_L = 600;	//前壁補正
-	RF_WALL_EXIST2 = 480; //前壁補正　開始
-	LF_WALL_EXIST2 = 480;   //前壁補正　開始
+	FRONT_CTRL_R = 710;   //前壁補正
+	FRONT_CTRL_L = 595;	//前壁補正
+	RF_WALL_EXIST2 = 450; //前壁補正　開始
+	LF_WALL_EXIST2 = 450;   //前壁補正　開始
 
 	wallhosei = 100;
 

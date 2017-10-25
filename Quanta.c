@@ -47,7 +47,7 @@
 #include "OperationSystem.h"
 #include "SerialMapper.h"
 
-void buzzer() {
+volatile void buzzer() {
 	if ((buzzerTimer % 2) == 0) {
 		PORTC.PODR.BIT.B6 = 1;
 	} else {
@@ -57,10 +57,24 @@ void buzzer() {
 	if (m_time != 0) {
 		if (buzzerTimer == m_time) {
 			stopCmt1();
+			singing = false;
 		}
 	}
 }
-
+void mtu6A() {
+	LED1 = 1;
+	PORTC.PODR.BIT.B6 = 0;
+	buzzerTimer++;
+	if (m_time != 0) {
+		if (buzzerTimer == m_time) {
+			stopCmt1();
+		}
+	}
+}
+void mtu6B() {
+	LED4 = 1;
+	PORTC.PODR.BIT.B6 = 1;
+}
 volatile void cmt() {
 	timer++;
 	time++;
@@ -70,6 +84,34 @@ volatile void cmt() {
 	swRight = !PushRight;
 	swLeft = !PushLeft;
 	swCenter = !PushCenter;
+	if (!PushTop) {
+		cmtMusic(D2s_, 250);
+	}
+	if (!PushRight) {
+		cmtMusic(D2s_, 250);
+	}
+	if (!PushLeft) {
+		cmtMusic(D2s_, 250);
+	}
+	if (!PushBottom) {
+		cmtMusic(D2s_, 250);
+	}
+	if (singing) {
+		buzzer();
+	}
+//	if ((time % 4) == 0) {
+//
+//		if ((buzzerTimer % 2) == 0) {
+//			PORTC.PODR.BIT.B6 = 1;
+//			LED4 = 1;
+//			LED_RIGHT = 0;
+//		} else {
+//			PORTC.PODR.BIT.B6 = 0;
+//			LED4 = 0;
+//			LED_RIGHT = 1;
+//		}
+//		buzzerTimer++;
+//	}
 
 	Physical_Basement();
 	if (logs < L_Length && cc == 1) {
@@ -292,6 +334,10 @@ void main(void) {
 	coin(100);
 	ledOn = 1;
 	os_escape = 1;
+//	for (int i = 0; i < 100; i++) {
+//		makeMusic(400 + 400 * i, 500);
+////		cmt_wait(500);
+//	}
 
 //	testFcu();
 //	preread();

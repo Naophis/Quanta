@@ -405,7 +405,7 @@ void keepZeroPoint() {
 	readGyroParam();
 	readVelocityGain();
 //	resetGyroParam();
-//	mtu_start();
+	mtu_start();
 //	positionControlValueFlg = 1;
 	ang = 0;
 	angle = 0;

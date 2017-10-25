@@ -79,9 +79,9 @@ void Excep_CMT0_CMI0(void) {
 }
 
 // CMT1 CMI1
-void buzzer();
+//void buzzer();
 void Excep_CMT1_CMI1(void) {
-	buzzer();
+//	buzzer();
 }
 
 // CMTW0 CMWI0
@@ -780,11 +780,15 @@ void Excep_PERIA_INTA211(void) {
 }
 
 // PERIA INTA212
+void mtu6A();
 void Excep_PERIA_INTA212(void) {
+	mtu6A();
 }
 
 // PERIA INTA213
+void mtu6B();
 void Excep_PERIA_INTA213(void) {
+	mtu6B();
 }
 
 // PERIA INTA214

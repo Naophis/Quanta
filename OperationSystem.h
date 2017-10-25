@@ -112,7 +112,7 @@ void testRun2(float v, float accele, float diaccele, float dist, float vM) {
 //inputRadiusDatas(Normal, 44.5, 45.5, 108.75, 33, 9, 21.5, 0, 0);
 
 void inputNaiperTurnAll500_2() {
-	setPrms(Large, 90, 125.0, 24.25, 10.0, 0, 0, 0.16079235076904297, 4, 800);
+	setPrms(Large, 90, 125.0, 24.25, 5.0, 0, 0, 0.16079235076904297, 4, 800);
 	setPrms3(Large, 23.5, 0);
 	setPrms(Orval, 180, 86.25, 30.0, 15.0, 0, 0, 0.2218923568725586, 4, 800);
 	setPrms3(Orval, 30, 0);
@@ -122,11 +122,15 @@ void inputNaiperTurnAll500_2() {
 	setPrms3(Dia135, 42, 34);
 	setPrms(Dia90, 90, 80.0, 29, 10.0, 0, 0, 0.10290718078613281, 4, 800);
 	setPrms3(Dia90, 33, 0);
-	setPrms(Normal, 90, 43.5, 12.75, 28.0, 0, 0, 0.0943603515625, 2, 600);
-	setPrms3(Normal, 17.5, 32.0);
 
 	setPrms(Normal, 90, 47.5, 12.5, 25.0, 0, 0, 0.10303688049316406, 2, 600);
 	setPrms3(Normal, 11.0, 31.0);
+
+	setPrms(Normal, 90, 50, 9.0, 22.0, 0, 0, 0.10845947265625, 2, 600);
+	setPrms3(Normal, 8.75, 27.0);
+
+	setPrms(Normal, 90, 50, 5.5, 21.0, 0, 0, 0.10845947265625, 2, 600);
+	setPrms3(Normal, 7.5, 25.0);
 }
 
 void inputNaiperTurnAll1200() {
@@ -319,8 +323,8 @@ void testNormalSlalom(float vMax) {
 	changeMode(true);
 	inputNaiperTurnAll1500();
 
-	setPrms(Normal, 90, 47.5, 12.5, 25.0, 0, 0, 0.10303688049316406, 2, 600);
-	setPrms3(Normal, 11.0, 31.0);
+	setPrms(Normal, 90, 50, 5.5, 21.0, 0, 0, 0.10845947265625, 2, 600);
+	setPrms3(Normal, 7.5, 25.0);
 
 	save();
 
@@ -627,8 +631,6 @@ char encorderOperation() {
 			led(0, 0, 0);
 			LED6 = true;
 		}
-		myprintf("%d %d %d %d %d	%d\r\n", swTop, swLeft, swRight, swBottom,
-				swCenter, mode);
 		cmt_wait(10);
 		if (swTop || swBottom) {
 			if (swTop) {
@@ -657,7 +659,7 @@ char encorderOperation() {
 
 		if (swCenter) {
 			os_escape = 1;
-			decide(250);
+			decide(100);
 			led(1, 1, 1);
 			cmt_wait(500);
 			led(0, 0, 0);
@@ -763,7 +765,7 @@ char action(char mode, char goalX, char goalY, char fastMode) {
 	char isFull = isFullMaze(goalX, goalY);
 	char m2;
 	if (mode == SEARCH2) {
-		m2 = selectGoal() == 7 ? Oufuku : Kata;
+		m2 = eigherRightLeft() == Right ? Oufuku : Kata;
 	}
 	if (mode == SEARCH || mode == SEARCH2) {
 //		Sen.Kp = 0.01;

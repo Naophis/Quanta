@@ -51,25 +51,35 @@
 #define B3_ 1975.533205024496
 #define C4_ 2093.0
 
-#define brushless_ 10000
 #define MUSIC_CYCLE 60000000.0f
 volatile int m_time = 0;
 volatile unsigned int melodyTime = 0;
 
 volatile char singing = false;
+//void startCmt1(int T) {
+//	if (singing == false) {
+//		CMT1.CMCNT = 0;
+//		CMT1.CMCOR = T;
+//		buzzerTimer = 0;
+//		CMT.CMSTR0.BIT.STR1 = 1;
+//	}
+//	singing = true;
+//}
+//void stopCmt1() {
+//	singing = false;
+//	PORTC.PODR.BIT.B6 = 0;
+//	CMT.CMSTR0.BIT.STR1 = 0;
+//}
+
+volatile int musicTimeout = 0;
 void startCmt1(int T) {
-	if (singing == false) {
-		CMT1.CMCNT = 0;
-		CMT1.CMCOR = T;
-		buzzerTimer = 0;
-		CMT.CMSTR0.BIT.STR1 = 1;
-	}
+	buzzerTimer = 0;
 	singing = true;
 }
+
 void stopCmt1() {
 	singing = false;
 	PORTC.PODR.BIT.B6 = 0;
-	CMT.CMSTR0.BIT.STR1 = 0;
 }
 void makeMusic(float melo, int meloTime) {
 	m_time = 0;

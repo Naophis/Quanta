@@ -129,7 +129,7 @@ void initCmt1() {
 	SYSTEM.MSTPCRA.BIT.MSTPA15 = 0;
 	MSTP (CMT1) = 0;
 	IEN(CMT1, CMI1) = 1;
-	IPR(CMT1, CMI1) = 7;
+	IPR(CMT1, CMI1) = 8;
 	SYSTEM.PRCR.BIT.PRC1 = 0;
 	CMT1.CMCR.BIT.CKS = 0;
 	CMT1.CMCR.BIT.CMIE = 1;
@@ -231,18 +231,19 @@ void initGPT01() {
 	GPT2.GTCCRA = FAN_CYCLE / 4;
 	GPT2.GTCCRC = FAN_CYCLE / 4;
 
-	GPT3.GTCNT = 0;
-	GPT3.GTCR.BIT.MD = 0;
-	GPT3.GTUDC.WORD = 0;
-	GPT3.GTCR.BIT.TPCS = 0;
-	GPT3.GTIOR.BIT.GTIOA = 6;
-	PORTC.PMR.BIT.B6 = 1;
-	MPC.PC6PFS.BIT.PSEL = 0x1E; //GPT1 GTIOC2A
-	GPT3.GTONCR.BIT.OAE = 1;
-	GPT3.GTBER.BIT.CCRA = 1;
-	GPT3.GTPR = M_CYCLE;
-	GPT3.GTCCRA = M_CYCLE / 2;
-	GPT3.GTCCRC = M_CYCLE / 2;
+//	GPT3.GTCNT = 0;
+//	GPT3.GTCR.BIT.MD = 0;
+//	GPT3.GTUDC.WORD = 0;
+//	GPT3.GTCR.BIT.TPCS = 0;
+//	GPT3.GTIOR.BIT.GTIOB = 6;
+//	PORTC.PMR.BIT.B6 = 1;
+//	MPC.PC6PFS.BIT.PSEL = 0x1E; //GPT1 GTIOC2A
+////	GPT3.GTONCR.BIT.OAE = 1;
+//	GPT3.GTONCR.BIT.OBE = 1;
+//	GPT3.GTBER.BIT.CCRA = 1;
+//	GPT3.GTPR = M_CYCLE;
+//	GPT3.GTCCRA = M_CYCLE / 2;
+//	GPT3.GTCCRC = M_CYCLE / 2;
 
 	//protect on
 	MPC.PWPR.BIT.B0WI = 1;
@@ -250,7 +251,7 @@ void initGPT01() {
 
 	SYSTEM.PRCR.WORD = 0xA500;	// protext off
 }
-void init_Mtu4() {
+void init_Mtu4_2() {
 	SYSTEM.PRCR.WORD = 0xA503; // Protect off
 	/*	P257でベクタテーブルの説明	*/
 	MSTP (MTU4) = 0;
@@ -278,6 +279,49 @@ void stopVacume() {
 	fanStart = false;
 	cmt_wait(1);
 	GPT.GTSTR.BIT.CST2 = 0;
+}
+
+void init_Mtu4() {
+	SYSTEM.PRCR.WORD = 0xA503; // Protect off
+	/*	P257でベクタテーブルの説明	*/
+	MSTP (MTU4) = 0;
+	MTU4.TCR.BIT.TPSC = 0;
+	MTU4.TCR.BIT.CCLR = 2;				// TGRBコンペアマッチでTCNTクリア
+	MTU4.TIER.BIT.TGIEA = 1;				// TGRAの割り込み許可
+	MTU4.TGRA = (int) (_PCLKA / MTU_CYCLE) - 1900 - 1;// TGRB - TGRA = 発光時間 3840= 40us
+	MTU4.TIER.BIT.TGIEB = 1;				// TGRBの割り込み許可
+	MTU4.TGRB = (int) (_PCLKA / MTU_CYCLE) - 1;	// 96MHz 1/96M =0.0104166us 0.0104166*19200=0.2ms
+	//割り込み許可
+	IEN(PERIA, INTA210) = 1;
+	ICU.SLIAR210.BYTE = 0x15U;
+	IPR(PERIA, INTA210) = 13;
+
+	ICU.SLIAR211.BYTE = 0x16U;
+	IEN(PERIA, INTA211) = 1;
+	IPR(PERIA, INTA211) = 12;
+
+	MTU.TSTRA.BIT.CST4 = 1;				//MTU0のカウントスタート p460
+	SYSTEM.PRCR.WORD = 0xA500; // Protect off
+
+
+	SYSTEM.PRCR.WORD = 0xA503; // Protect of//f
+	/*	P257でベクタテーブルの説明	*///
+//	MSTP (MTU6) = 0;
+//	MTU6.TCR.BIT.TPSC = 0;
+//	MTU6.TCR.BIT.CCLR = 1;				// TGRBコンペアマッチでTCNTクリ//ア
+//	MTU6.TIER.BIT.TGIEA = 1;				// TGRAの割り込み許//可
+//	MTU6.TGRA = (int) (_PCLKA / MTU_CYCLE) - 1900 - 1;// TGRB - TGRA = 発光時間 3840= 40u//s
+//	MTU6.TIER.BIT.TGIEB = 1;				// TGRBの割り込み許//可
+//	MTU6.TGRB = (int) (_PCLKA / MTU_CYCLE) - 1;	// 96MHz 1/96M =0.0104166us 0.0104166*19200=0.2m//s
+//	//割り込み許//可
+//	IEN(PERIA, INTA212) = 1;
+//	ICU.SLIAR212.BYTE = 0x15U;
+//	IPR(PERIA, INTA212) = 6;
+//	ICU.SLIAR213.BYTE = 0x16U;
+//	IEN(PERIA, INTA213) = 1;
+//	IPR(PERIA, INTA213) = 7;
+
+	SYSTEM.PRCR.WORD = 0xA500; // Protect off
 }
 
 void startVacume2(int duty) {
