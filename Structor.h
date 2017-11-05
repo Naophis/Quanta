@@ -26,6 +26,8 @@ typedef struct {			//センサ情報用
 	float old;
 	float ref;			//リファレンス
 	float ref2;
+	float ref3;
+
 	float th;				//閾値
 	int th_control;		//制御をかけるか否かの閾値
 	int wall_limit;
@@ -41,22 +43,27 @@ volatile char sen_r2[5];
 volatile char sen_l2[5];
 volatile float sen_log_r[5];
 volatile float sen_log_l[5];
+volatile float sen_log_fr[5];
+volatile float sen_log_fl[5];
 volatile float sen_log_r2[5];
 volatile float sen_log_l2[5];
+
+volatile float peekSideR, peekSideL;
 
 typedef struct {
 	float error_now;
 	float error_old;
 	float error_delta;
 } t_Errors;
-volatile t_Errors Se, Se2, Vr, Vl, Gy, Velocity, W_enc, Wl, Angle;
+volatile t_Errors Se, Se2, Se3, Vr, Vl, Gy, Velocity, W_enc, Wl, Angle, SeFrntL,
+		SeFrnt, SeFrntAngle;
 typedef struct {
 	float Kp;
 	float Ki;
 	float Kd;
 } t_PID;
 volatile t_PID Vel_r, Vel_l, Gyro, Sen, Sen_Dia, Sen_Dia_Side, Vel, Omega,
-		Angles;
+		Angles, Backs, FrontCtrl, FrontCtrlAngle;
 typedef struct {
 	float r;
 	float l;
@@ -67,6 +74,7 @@ typedef struct {
 	float g;
 	float angles;
 	float s2;
+	float v;
 } t_Control;
 volatile t_Control C;
 

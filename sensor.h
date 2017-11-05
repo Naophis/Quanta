@@ -63,4 +63,75 @@ void sensing_front() {
 	RF_SEN1.on = RF;
 }
 
+char isIncrease(char RorL) {
+	if (RorL == R) {
+		char flag = true;
+		for (char i = 0; i < 3; i++) {
+			if (sen_log_r[i] < sen_log_r[i + 1]) {
+				flag = false;
+			}
+		}
+		return flag;
+	} else {
+		char flag = true;
+		for (char i = 0; i < 3; i++) {
+			if (sen_log_l[i] < sen_log_l[i + 1]) {
+				flag = false;
+			}
+		}
+		return flag;
+	}
+	return false;
+}
+
+char startDecrease(char RorL) {
+	if (RorL == R) {
+		char flag = true;
+		char flag2 = true;
+		for (char i = 1; i < 3; i++) {
+			if (sen_log_r[i] < sen_log_r[i + 1]) {
+				flag = false;
+			}
+		}
+		if (sen_log_r[0] < sen_log_r[1]) {
+			flag2 = false;
+		}
+		return flag && !flag2;
+	} else {
+		char flag = true;
+		char flag2 = true;
+		for (char i = 1; i < 3; i++) {
+			if (sen_log_l[i] < sen_log_l[i + 1]) {
+				flag = false;
+			}
+		}
+		if (sen_log_l[0] < sen_log_l[1]) {
+			flag2 = false;
+		}
+		return flag && !flag2;
+	}
+	return false;
+}
+
+char isIncreaseFront(char RorL) {
+	if (RorL == R) {
+		char flag = true;
+		for (char i = 0; i < 3; i++) {
+			if (sen_log_fr[i] < sen_log_fr[i + 1]) {
+				flag = false;
+			}
+		}
+		return flag;
+	} else {
+		char flag = true;
+		for (char i = 0; i < 3; i++) {
+			if (sen_log_fl[i] < sen_log_fl[i + 1]) {
+				flag = false;
+			}
+		}
+		return flag;
+	}
+	return false;
+}
+
 #endif /* SENSOR_H_ */

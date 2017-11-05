@@ -79,8 +79,8 @@ void Excep_FCU_FIFERR(void);
 // vector 22 reserved
 
 // FCU FRDYI
-#pragma interrupt (Excep_FCU_FRDYI(vect=23))
-void Excep_FCU_FRDYI(void);
+//#pragma interrupt (Excep_FCU_FRDYI(vect=23))
+//void Excep_FCU_FRDYI(void);
 
 // vector 24 reserved
 // vector 25 reserved

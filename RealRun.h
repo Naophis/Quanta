@@ -35,7 +35,7 @@ char runForPath(float max, float ac, float diac) {
 	getAllPram2();
 	cmt_wait(100);
 //	back(-100, -1000, 50, 0);
-	gyroZeroCheck(false);
+	gyroZeroCheck(true);
 	if (pLarge.velocity >= 1200) {
 		TRANSAM = true;
 //		LED_R = true;
@@ -70,7 +70,7 @@ char runForPath(float max, float ac, float diac) {
 		if (dist > 0 || i == 0) {
 			if (dia == 0) {
 				if (i == 0) {
-					check = realRun(max, ac, diac, (dist) * 180 + 43,
+					check = realRun(max, ac, diac, (dist) * 180 + 41,
 							slaVelocity);
 				} else {
 					check = realRun(max, ac, diac, dist * 180 + slalomDist,
@@ -120,7 +120,7 @@ char runForPath(float max, float ac, float diac) {
 			return 0;
 		}
 	}
-	running(50, -diac, 90, 1);
+	running(150, -diac, 90, 1);
 
 	if (!dia) {
 		frontCtrl2();
@@ -170,11 +170,13 @@ char runForKnownPath(float max, float ac, float diac) {
 		if (dist > 0) {
 			if (dia == 0) {
 				if (path_t[i] == 255 && tmp) {
-					check = realRun(max, ac, diac, dist * 180 + slalomDist + 25,
+					cmtMusic(C2_, 500);
+					check = realRun(max, ac, diac, dist * 180 + slalomDist,
 							slaVelocity);
 				} else if (path_t[i] != 255
 						&& !(path_t[i] == 1 || path_t[i] == 2)) {
-					check = realRun(max, ac, diac, dist * 180 + slalomDist - 35,
+					cmtMusic(C2_, 500);
+					check = realRun(max, ac, diac, dist * 180 + slalomDist,
 							slaVelocity);
 					tmp = true;
 				} else if (path_t[i] == 1 || path_t[i] == 2) {
@@ -267,7 +269,7 @@ char realRun3(float max, float ac, float diac, float dist, float sla) {
 	M2 = (max2 + sla) * (max2 - sla) / (2.0f * diac);
 	M = dist - M2;
 	if (running(max2, ac, M, 1)) {
-		if (running(sla, -diac, M2, 0)) {
+		if (running(sla, -diac, M2, 1)) {
 			gyroOn = 0;
 			return 1;
 		} else {

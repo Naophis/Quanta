@@ -30,16 +30,15 @@
 #include "VectorPath.h"
 #include "Path.h"
 #include "RealRun.h"
-//#include "r_flash_api_rx_config.h"
-//#include "r_flash_api_rx_if.h"
+
+#include "flash/r_flash_rx_config.h"
+#include "flash/r_flash_rx_if.h"
+#include "flash.h"
+
 #include "Adachi.h"
 #include "cirkit.h"
 
-//#include "Flash.h"
-#include "flash3.h"
-#include "flash2.h"
 #include "ParamImporter.h"
-//#include "myFlash.h"
 
 #include "Setting.h"
 #include "Mram.h"
@@ -99,29 +98,16 @@ volatile void cmt() {
 	if (singing) {
 		buzzer();
 	}
-//	if ((time % 4) == 0) {
-//
-//		if ((buzzerTimer % 2) == 0) {
-//			PORTC.PODR.BIT.B6 = 1;
-//			LED4 = 1;
-//			LED_RIGHT = 0;
-//		} else {
-//			PORTC.PODR.BIT.B6 = 0;
-//			LED4 = 0;
-//			LED_RIGHT = 1;
-//		}
-//		buzzerTimer++;
-//	}
 
 	Physical_Basement();
 	if (logs < L_Length && cc == 1) {
-		if ((time % 1) == 0) {
+		if ((time % 3) == 0) {
 			log1[logs] = (int) (V_now);
 			logs2[logs] = ((Wo * Wo - W_now * W_now) / (2.0 * alpha));
 			log3[logs] = (V_Enc.r + V_Enc.l) / 2;
 			log4[logs] = (ang * 180 / PI);
-			log5[logs] = DutyL;
-			log6[logs] = DutyR;
+			log5[logs] = Duty_l * 100;
+			log6[logs] = Duty_r * 100;
 			log7[logs] = (battery);
 			log8[logs] = (LS_SEN1.now);
 			log9[logs] = (RS_SEN1.now);
@@ -134,6 +120,15 @@ volatile void cmt() {
 			log16[logs] = (V_Enc.l);
 			log17[logs] = (float) (alpha);
 			log18[logs] = (float) (MTU1.TCNT);
+			log19[logs] = (feadforward_para(L));
+			log20[logs] = (feadforward_para(R));
+			log21[logs] = Ke * getRpm(L);
+			log22[logs] = Ke * getRpm(R);
+			log23[logs] = FF_calc(L);
+			log24[logs] = FF_calc(R);
+			log25[logs] = C.g;
+			log26[logs] = C.s;
+			log27[logs] = C.s2;
 			logs++;
 
 //			log1[logs] = (int) (V_now);
@@ -223,9 +218,6 @@ void mtu4_B() {
 		gyros[2] = getMpuData();
 		break;
 	case 4:
-//		sensing_side_right();
-//		getBattery();
-
 		if (fanStart) {
 			if ((FAN_AMP / battery) <= FAN_CYCLE) {
 				GPT2.GTCCRA = GPT2.GTCCRC =
@@ -246,7 +238,7 @@ void mtu4_B() {
 		getSensorData();
 
 		float tmpGyros = (gyros[0] + gyros[1] + gyros[2] + gyros[3]) / 4;
-		settleGyro2 = (G.ref - tmpGyros) * G.th;
+		settleGyro2 = (tmpGyros - G.ref) * G.th;
 		G.now = settleGyro2;
 		settleGyroOld = settleGyro;
 		settleGyro = 0.1 * G.now + 0.9 * G.old;
@@ -267,6 +259,19 @@ void mtu4_B() {
 
 		sen_log_r[0] = RS_SEN1.now;
 		sen_log_l[0] = LS_SEN1.now;
+
+		sen_log_fr[4] = sen_log_fr[3];
+		sen_log_fr[3] = sen_log_fr[2];
+		sen_log_fr[2] = sen_log_fr[1];
+		sen_log_fr[1] = sen_log_fr[0];
+
+		sen_log_fl[4] = sen_log_fl[3];
+		sen_log_fl[3] = sen_log_fl[2];
+		sen_log_fl[2] = sen_log_fl[1];
+		sen_log_fl[1] = sen_log_fl[0];
+
+		sen_log_fr[0] = RF_SEN1.now;
+		sen_log_fl[0] = LF_SEN1.now;
 
 		sen_r[4] = sen_r[3];
 		sen_r[3] = sen_r[2];
@@ -315,6 +320,27 @@ void test() {
 	ComFlag = true;
 }
 
+void printErrorEnum() {
+	myprintf("%s %d\r\n", STR(FLASH_SUCCESS), FLASH_SUCCESS);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_BUSY), FLASH_ERR_BUSY);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_ACCESSW), FLASH_ERR_ACCESSW);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_FAILURE), FLASH_ERR_FAILURE);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_CMD_LOCKED), FLASH_ERR_CMD_LOCKED);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_LOCKBIT_SET), FLASH_ERR_LOCKBIT_SET);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_FREQUENCY), FLASH_ERR_FREQUENCY);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_ALIGNED), FLASH_ERR_ALIGNED);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_BOUNDARY), FLASH_ERR_BOUNDARY);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_OVERFLOW), FLASH_ERR_OVERFLOW);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_BYTES), FLASH_ERR_BYTES);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_ADDRESS), FLASH_ERR_ADDRESS);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_BLOCKS), FLASH_ERR_BLOCKS);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_PARAM), FLASH_ERR_PARAM);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_NULL_PTR), FLASH_ERR_NULL_PTR);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_UNSUPPORTED), FLASH_ERR_UNSUPPORTED);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_SECURITY), FLASH_ERR_SECURITY);
+	myprintf("%s %d\r\n", STR(FLASH_ERR_TIMEOUT), FLASH_ERR_TIMEOUT);
+}
+
 void main(void) {
 	initRX64M();
 	batteryCheck();
@@ -334,6 +360,10 @@ void main(void) {
 	coin(100);
 	ledOn = 1;
 	os_escape = 1;
+//	readMaze();
+
+//	testFcu();
+
 //	for (int i = 0; i < 100; i++) {
 //		makeMusic(400 + 400 * i, 500);
 ////		cmt_wait(500);

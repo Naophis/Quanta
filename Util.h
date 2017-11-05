@@ -31,6 +31,102 @@ char eigherRightLeft() {
 	LED_RIGHT = LED_LEFT = false;
 	return res;
 }
+
+char updown() {
+	volatile signed char mode = SEARCH;
+	os_escape = 0;
+	int interval = 25;
+	while (1) {
+		char swTop = !PushTop;
+		char swBottom = !PushBottom;
+		char swRight = !PushRight;
+		char swLeft = !PushLeft;
+		char swCenter = !PushCenter;
+
+		if (mode == SEARCH) {
+			led(1, 0, 0, 0);
+		} else if (mode == SEARCH2) {
+			led(0, 1, 0, 0);
+		} else if (mode == RUN) {
+			led(1, 1, 0, 0);
+		} else if (mode == RUN2) {
+			led(0, 0, 1, 0);
+		} else if (mode == RUN3) {
+			led(1, 0, 1, 0);
+		} else if (mode == RUN4) {
+			led(0, 1, 1, 0);
+		} else if (mode == RUN5) {
+			led(1, 1, 1, 0);
+		} else if (mode == CONFIG) {
+			led(0, 0, 0, 1);
+		} else if (mode == CONFIG2) {
+			led(1, 0, 0, 1);
+		} else if (mode == CONFIG3) {
+			led(0, 1, 0, 1);
+		}
+
+		if (swTop || swBottom) {
+			if (swTop) {
+				mode++;
+				if (mode > CONFIG3) {
+					mode = SEARCH;
+				}
+			}
+			if (swBottom) {
+				mode--;
+				if (mode < 0) {
+					mode = CONFIG3;
+				}
+			}
+			for (int i = 0; i < 60000; i++)
+				;
+		}
+
+		while (swTop || swBottom) {
+			swTop = !PushTop;
+			swBottom = !PushBottom;
+			swRight = !PushRight;
+			swLeft = !PushLeft;
+			swCenter = !PushCenter;
+		};
+
+		if (swCenter) {
+			os_escape = 1;
+			decide(100);
+			led(1, 1, 1, 1);
+			cmt_wait(500);
+			led(0, 0, 0, 0);
+			cmt_wait(500);
+			break;
+		}
+		cmt_wait(10);
+	}
+	return mode;
+}
+
+float getMaxVeloctiy() {
+	char mode = updown();
+	if (mode == 1) {
+		return 2000;
+	} else if (mode == 2) {
+		return 2500;
+	} else if (mode == 3) {
+		return 3000;
+	} else if (mode == 4) {
+		return 3500;
+	} else if (mode == 5) {
+		return 4000;
+	} else if (mode == 6) {
+		return 4500;
+	} else if (mode == 7) {
+		return 4750;
+	} else if (mode == 8) {
+		return 5000;
+	} else if (mode == 9) {
+		return 5100;
+	}
+	return 2000;
+}
 char selectGoal();
 void resetData2() {
 	ang = 0;
@@ -200,7 +296,7 @@ void batteryCheck() {
 	cmt_wait(1000);
 
 	if (battery > 10) {
-		if (battery < 11.25) {
+		if (battery < 11.5) {
 			while (Swich) {
 				cmt_wait(250);
 				LED1 = 1;
@@ -422,6 +518,7 @@ void keepZeroPoint() {
 		myprintf("Duty:	%f	%f\r\n", Duty_l, Duty_r);
 		myprintf("Velocity:	%f	%f\r\n", V_Enc.l, V_Enc.r);
 		myprintf("angle:	%f\r\n", ang * 180 / PI);
+		myprintf("distance:	%f\r\n", distance);
 //		myprintf(
 //				"{\"mode\":%d,\"battery\":%f,\"gyro\":%f,\"LS1\":%f,\"RS1\":%f,\"LF1\":%f,\"RF1\":%f}\r\n",
 //				ledOn, battery, settleGyro, LS_SEN1.now, RS_SEN1.now,
@@ -434,6 +531,47 @@ void keepZeroPoint() {
 		}
 		if (!fail) {
 //			break;
+		}
+	}
+	mtu_stop();
+}
+void keepZeroPoint2() {
+	//	motionCheck();
+	//	cmt_wait(500);
+	gyroZeroCheck(true);
+	readGyroParam();
+	readVelocityGain();
+	//	resetGyroParam();
+	mtu_start();
+	//	positionControlValueFlg = 1;
+	ang = 0;
+	angle = 0;
+
+	cmt_wait(500);
+	sensingMode = AtackStraight;
+	while (1) {
+		myprintf("%c[2J", ESC); /* 画面消去 */
+		myprintf("%c[0;0H", ESC); /* 戦闘戻す*/
+		myprintf("battery=%f V\r\n", battery);
+		myprintf("Gyro=%f\r\n", settleGyro);
+		myprintf("	%f %f\r\n", LS_SEN1.now, RS_SEN1.now);
+		myprintf("%f 		%f\r\n", LF_SEN1.now, RF_SEN1.now);
+		myprintf("Duty:	%f	%f\r\n", Duty_l, Duty_r);
+		myprintf("Velocity:	%f	%f\r\n", V_Enc.l, V_Enc.r);
+		myprintf("angle:	%f\r\n", ang * 180 / PI);
+		myprintf("distance:	%f\r\n", distance);
+		//		myprintf(
+		//				"{\"mode\":%d,\"battery\":%f,\"gyro\":%f,\"LS1\":%f,\"RS1\":%f,\"LF1\":%f,\"RF1\":%f}\r\n",
+		//				ledOn, battery, settleGyro, LS_SEN1.now, RS_SEN1.now,
+		//				LF_SEN1.now, RF_SEN1.now);
+		cmt_wait(100);
+		//		myprintf("%f	%f	%d	%d	%f	%f\r\n", V_Enc.l, V_Enc.r, el, er, Duty_l,
+		//				Duty_r);
+		if (Swich == 0) {
+			break;
+		}
+		if (!fail) {
+			//			break;
 		}
 	}
 	mtu_stop();
@@ -549,8 +687,11 @@ void logOutPut() {
 		cmt_wait(1);
 		myprintf(" %f %f %f %f", log9[c], logs10[c], log11[c], log12[c]);
 		cmt_wait(1);
-		myprintf(" %f %f %f %f %f %f\r\n", log13[c], log14[c], log15[c],
-				log16[c], log17[c], log18[c]);
+		myprintf(" %f %f %f %f %f %f", log13[c], log14[c], log15[c], log16[c],
+				log17[c], log18[c]);
+		myprintf(" %f %f %f %f %f %f", log19[c], log20[c], log21[c], log22[c],
+				log23[c], log24[c]);
+		myprintf(" %f %f %f\r\n", log25[c], log26[c], log27[c]);
 	}
 }
 

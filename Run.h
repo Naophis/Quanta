@@ -118,6 +118,9 @@ char checkDown2(char RorL) {
 }
 char running(float vmax, float ACC, float dist, char control) {
 //	char errorCheck = 1;
+	rotate_r = rotate_l = true;
+	friction_str = true;
+	friction_roll = false;
 	readGyroParam();
 	if (!gyroOn) {
 		resetGyroParam();
@@ -177,6 +180,11 @@ char gyroRollTest(char RorL, float Angle, float w_max, float al) {
 	if (RorL == L) {
 		al = -al;
 	}
+	rotate_r = (RorL != R);
+	rotate_l = (RorL == R);
+	friction_str = false;
+	friction_roll = true;
+
 	if (ABS(w_max) > W_max) {
 		w_max = RorL == L ? -W_max : W_max;
 	} else {
@@ -238,6 +246,11 @@ char gyroRoll(char RorL, float Angle, float w_max, float al) {
 	if (RorL == L) {
 		al = -al;
 	}
+	rotate_r = (RorL != R);
+	rotate_l = (RorL == R);
+	friction_str = false;
+	friction_roll = true;
+
 	if (ABS(w_max) > W_max) {
 		w_max = RorL == R ? -W_max : W_max;
 	} else {
@@ -304,6 +317,10 @@ char roll_timer(char RorL, float Angle, float w_max, float al) {
 	} else {
 		G.th = gyroTh_L;
 	}
+	rotate_r = (RorL != R);
+	rotate_l = (RorL == R);
+	friction_str = false;
+	friction_roll = true;
 	cmt_wait(250);
 	mtu_start();
 	alpha = al;
@@ -363,6 +380,10 @@ char roll(char RorL, float Angle, float w_max, float al) {
 	if (RorL == R) {
 		al = -al;
 	}
+	rotate_r = (RorL != R);
+	rotate_l = (RorL == R);
+	friction_str = false;
+	friction_roll = true;
 	if (RorL == R) {
 		G.th = gyroTh_R;
 	} else {
@@ -454,9 +475,11 @@ char frontCtrl3() {
 #define FRONT_CTRL_L2 1000
 char frontCtrl2() {
 	char tmp = sensingMode;
-	if (LF_SEN1.now > 0 && RF_SEN1.now > 0) {
+	distance = 0;
+	if (LF_SEN1.now > 0 && RF_SEN1.now > 0 && distance < 100) {
 		sensingMode = SearchMode;
-		while (RF_SEN1.now < FRONT_CTRL_R2 && LF_SEN1.now < FRONT_CTRL_L2)
+		while (RF_SEN1.now < FRONT_CTRL_R2 && LF_SEN1.now < FRONT_CTRL_L2
+				&& distance < 100)
 			;
 		sensingMode = tmp;
 	}
@@ -474,7 +497,8 @@ char targetRun(float vmax, float ACC, float dist, char control, char target) {
 	sinCount = 0;
 	positionControlValueFlg = control;
 //	positionControlValueFlg = 0;
-
+	friction_str = true;
+	friction_roll = false;
 	V_max = vmax;
 //	G.th = gyroTh_R;
 	runFlg = 1;
@@ -544,11 +568,11 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 	float rad = toRadians(getTargetAngle(type));
 	float time = getNaiperTime(type);
 	char frontSkip = false;
-
 //	myprintf("%f	%f	%f\r\n", radius, rad, time);
 	etN = getNaiperN(type);
 	w_now = 0;
 	W_now = 0;
+
 	if (RorL == R) {
 		G.th = gyroTh_R;
 	} else {
@@ -557,37 +581,44 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 	if (type == Normal) {
 		frontCtrl();
 		frontSkip = false;
-		if (RS_SEN1.now > 845 && RorL == L) {
-			realRun3(Velocity, 3500, 3500, 90, 25);
-			mtu_stop();
-			gyroRoll(L, 90, 60, 80);
-			back(-800, -2000, 50, 0);
-			cmt_wait(50);
-			mtu_start();
-			running2(Velocity, 4000, 90 + 49, 1);
-			return 1;
-		} else if (LS_SEN1.now > 1100 && RorL == R) {
-			realRun3(Velocity, 3500, 3500, 90, 25);
-			mtu_stop();
-			gyroRoll(R, 90, 60, 80);
-			back(-800, -2000, 50, 0);
-			cmt_wait(50);
-			mtu_start();
-			running2(Velocity, 4000, 90 + 49, 1);
-			return 1;
-		} else if (LF_SEN1.now > 800 || RF_SEN1.now > 800) {
+//		if (RS_SEN1.now > 845 && RorL == L) {
+//			realRun3(Velocity, 3500, 3500, 90, 25);
+//			mtu_stop();
+//			gyroRoll(L, 90, 60, 80);
+//			back(-800, -2000, 50, 0);
+//			cmt_wait(50);
+//			mtu_start();
+//			running2(Velocity, 4000, 90 + 49, 1);
+//			return 1;
+//		} else if (LS_SEN1.now > 1100 && RorL == R) {
+//			realRun3(Velocity, 3500, 3500, 90, 25);
+//			mtu_stop();
+//			gyroRoll(R, 90, 60, 80);
+//			back(-800, -2000, 50, 0);
+//			cmt_wait(50);
+//			mtu_start();
+//			running2(Velocity, 4000, 90 + 49, 1);
+//			return 1;
+//		} else
+		if (LF_SEN1.now > 520 || RF_SEN1.now > 580) {
 			realRun3(Velocity, 3500, 3500, 60, 40);
 			frontCtrl4();
-			mtu_start();
+
+			frontWallCtrl = true;
+			cmt_wait(500);
+			frontWallCtrl = false;
+
+			mtu_stop();
+			cmt_wait(50);
 			if (RorL == R) {
-				gyroRoll(R, 90, 60, 80);
+				gyroRoll(L, 90, 30, 30);
 			} else {
-				gyroRoll(L, 90, 60, 80);
+				gyroRoll(R, 90, 30, 30);
 			}
-			back(-800, -2000, 30, 0);
+			back(-200, -2000, 40, 0);
 			cmt_wait(50);
 			mtu_start();
-			running2(Velocity, 4000, 90 + 30, 1);
+			running2(Velocity, 4000, 90 + 40, 1);
 			return 1;
 		}
 	}
@@ -620,6 +651,9 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 			return 0;
 		}
 	}
+	rotate_r = rotate_l = true;
+	friction_str = true;
+	friction_roll = true;
 	sinCount = 0;
 	readGyroParam();
 //	readGyroParam2();
@@ -630,7 +664,7 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 //	Se.error_old = 0;
 	sinCount = 1;
 	alphaMode = 1;
-	alphaTemp = RorL == L ? (-Velocity / radius) : (Velocity / radius);
+	alphaTemp = RorL == R ? (-Velocity / radius) : (Velocity / radius);
 	cc = 1;
 	slaTerm = time;
 	while (1) {
@@ -648,7 +682,7 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 			slaTerm = 0;
 			omegaTemp = 0;
 			W_now = 0;
-			if (RorL == R) {
+			if (RorL == L) {
 				angle = rad;
 			} else {
 				angle = -rad;
@@ -706,6 +740,8 @@ void front(float vmax, float ACC, float dist, char control) {
 	acc = ACC;
 	positionControlValueFlg = control;
 	V_max = vmax;
+	friction_str = true;
+	friction_roll = false;
 //	G.th = gyroTh_R;
 	while (distance < dist) {
 		if (!fail) {
@@ -773,6 +809,7 @@ char asc(float d, float d2) {
 char asc2(float d, float d2) {
 	return checkStablly();
 }
+
 char orignalRun(float v1, float v2, float ac, float diac, float dist) {
 	float d2;
 	char sequence = ACCELE;
@@ -786,10 +823,21 @@ char orignalRun(float v1, float v2, float ac, float diac, float dist) {
 	alpha = 0;
 	W_now = 0;
 	sinCount = 0;
+
+	rotate_r = rotate_l = true;
+	friction_str = true;
+	friction_roll = false;
 //	G.th = gyroTh_R;
 	runFlg = 1;
 	originalDiaMode = true;
+	peekSideR = peekSideL = 0;
 	while (ABS(distance) < ABS(dist)) {
+		if (startDecrease(R)) {
+			peekSideR = RS_SEN1.now;
+		}
+		if (startDecrease(L)) {
+			peekSideL = LS_SEN1.now;
+		}
 		d2 = ABS((V_now + v2) * (V_now - v2) / (2.0 * diac));
 		switch (sequence) {
 		case FIX:
@@ -846,9 +894,11 @@ char orignalRun(float v1, float v2, float ac, float diac, float dist) {
 			originalDiaMode = false;
 			tmpDiac = 0;
 			targetVelocity = 0;
+			peekSideR = peekSideL = 0;
 			return 0;
 		}
 	}
+	peekSideR = peekSideL = 0;
 	alpha = 0;
 	acc = 0;
 	positionControlValueFlg = 0;
@@ -867,8 +917,10 @@ void back(float v1, float ac, float dist, char control) {
 	float diac = ac;
 	char sequence = ACCELE;
 	mtu_start();
-	resetGyroParam();
-	resetAngleParam();
+	readGyroParam();
+	rotate_r = rotate_l = false;
+	friction_str = true;
+	friction_roll = false;
 	distance = 0;
 	alpha = 0;
 	W_now = 0;
@@ -934,6 +986,8 @@ char goStraight(float vmax, float term, float dist, char bool, char control) {
 //		readGyroParam();
 		readGyroParamP();
 	}
+	rotate_r = rotate_l = true;
+
 	distance = 0;
 	alpha = 0;
 	W_now = 0;
@@ -977,6 +1031,9 @@ char running2(float vmax, float ACC, float dist, char control) {
 		readGyroParam();
 	}
 
+	rotate_r = rotate_l = true;
+	friction_str = true;
+	friction_roll = false;
 	errorOld_dia = errorOld_dia_side = 0;
 //	sensingMode = AtackStraight;
 	readGyroParam();
@@ -1014,24 +1071,22 @@ char running2(float vmax, float ACC, float dist, char control) {
 		}
 		if (bool) {
 			if (bool2) {
-				if (checkSensor2Off(R, false)) {
+				if (checkSensorOff(R, false)) {
 				} else {
 					bool = false;
-					distance = 0;
-					dist = 30 + 10.0;
 					cmtMusic(10, 100);
-//					mtu_stop();
+					distance = 0;
+					dist = 70 + 25;
 					continue;
 				}
 			}
 			if (bool3) {
-				if (checkSensor2Off(L, false)) {
+				if (checkSensorOff(L, false)) {
 				} else {
 					bool = false;
-					distance = 0;
 					cmtMusic(10, 100);
-					dist = 30 + 7.50;
-//					mtu_stop();
+					distance = 0;
+					dist = 70 + 25;
 					continue;
 				}
 			}
@@ -1057,6 +1112,9 @@ char running3(float vmax, float ACC, float dist, char control) {
 	} else {
 		readGyroParam();
 	}
+	rotate_r = rotate_l = true;
+	friction_str = true;
+	friction_roll = false;
 	readGyroParam();
 	distance = 0;
 	alpha = 0;
@@ -1068,16 +1126,10 @@ char running3(float vmax, float ACC, float dist, char control) {
 	V_max = vmax;
 //	G.th = gyroTh_R;
 	runFlg = 1;
-	char lockRight = false;
-	char lockLeft = false;
 	char bool2 = checkSensor2Off(R, false);
 	char bool3 = checkSensor2Off(L, false);
 	char bool = bool2 | bool3;
-	char bool4 = (!bool2 | !bool3);
 	char lock = false;
-
-	lockRight = bool2;
-	lockLeft = bool3;
 
 	while (distance < dist) {
 		if (ACC > 0) {

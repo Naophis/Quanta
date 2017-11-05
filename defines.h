@@ -8,6 +8,8 @@
 #ifndef DEFINES_H_
 #define DEFINES_H_
 
+#define STR(var) #var   //引数にした変数を変数名を示す文字列リテラルとして返すマクロ関数
+
 #define true 1
 #define false 0
 volatile char setupCmt = false;
@@ -45,8 +47,10 @@ volatile char enableMPU = false;
 float battery, batteryOld;
 char fanStart = false;
 char fanStart2 = false;
-#define FAN_AMP2 10.50
-#define FAN_AMP 10.50
+//#define FAN_AMP2 10.50
+//#define FAN_AMP 10.50
+#define FAN_AMP2 11.0
+#define FAN_AMP 11.0	//11.35
 const float PI = 3.141592653589793;
 
 #define TRANSAM PORT1.PODR.BIT.B5
@@ -148,16 +152,16 @@ volatile char alphaMode = 0;
 volatile float alphaTemp = 0;
 volatile float omegaTemp = 0;
 volatile float slaTerm = 0;
-volatile char global_goal_x = 0, global_goal_y = 0;
 volatile char runFlg = 0;
 volatile char errorFlg = 0;
 volatile char globalError = 0;
 volatile char gyroKeepFlg = 0;
 
+volatile char frontWallCtrl = 0;
+
 volatile char isKnown = 0;
 
 volatile float tmpData = 0;
-char frontWallCtrl = false;
 #define MAZE_SIZE  16
 char dist[MAZE_SIZE][MAZE_SIZE];
 
@@ -192,11 +196,11 @@ unsigned char checkMap[16][16];
 unsigned char checkTurningPoint = false;
 char checkPoint = false;
 #define MAX 1023
-void led(char a, char b, char c) {
+void led(char a, char b, char c, char d) {
 	LED1 = a > 0;
 	LED2 = b > 0;
 	LED3 = c > 0;
-	LED4 = false;
+	LED4 = d > 0;
 	LED5 = false;
 	LED6 = false;
 }
@@ -296,6 +300,15 @@ volatile float log15[L_Length];
 volatile float log16[L_Length];
 volatile float log17[L_Length];
 volatile float log18[L_Length];
+volatile float log19[L_Length];
+volatile float log20[L_Length];
+volatile float log21[L_Length];
+volatile float log22[L_Length];
+volatile float log23[L_Length];
+volatile float log24[L_Length];
+volatile float log25[L_Length];
+volatile float log26[L_Length];
+volatile float log27[L_Length];
 
 #define Cycle 24000000.0f
 #define MTU_CYCLE 16000.0f	//4khz
@@ -305,6 +318,12 @@ volatile float log18[L_Length];
 #define CMT_CYCLE 4000 // 4kHz
 #define CMT_CYCLE2 2000 // 2kHz
 #define M_CYCLE2 500
+
+volatile char rotate_r = true;
+volatile char rotate_l = true;
+
+volatile char friction_str = true;
+volatile char friction_roll = false;
 
 volatile char RecvDat, ComFlag;
 volatile char enableSciUpdate = false;

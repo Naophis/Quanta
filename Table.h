@@ -8,7 +8,6 @@
 #ifndef TABLE_H_
 #define TABLE_H_
 
-
 #define Normal 0
 #define Large 1
 #define Orval 2
@@ -48,6 +47,16 @@
 #define CONFIG2 8
 #define CONFIG3 9
 #define CONFIG4 10
+#define CONFIG5 11
+#define CONFIG6 12
+#define CONFIG7 13
+#define CONFIG8 14
+#define CONFIG9 15
+
+#define KeepZeroPoint 16
+#define MapMemory 17
+#define VacumeTest 18
+#define Mentenance 19
 
 #define RUNNING 1
 char turnVary(char a) {

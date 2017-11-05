@@ -56,13 +56,13 @@ void Excep_BSC_BUSERR(void) {
 void Excep_RAM_RAMERR(void) {
 }
 
-// FCU FIFERR
-void Excep_FCU_FIFERR(void) {
-}
-
-// FCU FRDYI
-void Excep_FCU_FRDYI(void) {
-}
+//// FCU FIFERR
+//void Excep_FCU_FIFERR(void) {
+//}
+//
+//// FCU FRDYI
+//void Excep_FCU_FRDYI(void) {
+//}
 
 // ICU SWINT2
 void Excep_ICU_SWINT2(void) {
