@@ -749,6 +749,12 @@ volatile void updateWall(int x, int y, int dir) {
 		step(x, y - 1, North, true);
 	}
 }
+
+float R_WALL_EXIST = 330;  //探索時壁判定
+float L_WALL_EXIST = 400;  //探索時壁判定
+float RF_WALL_EXIST = 400; //探索時壁判定
+float LF_WALL_EXIST = 360; //探索時壁判定
+
 volatile void wallJudge2(short dir, short X, short Y) {
 	char wallN = 0, wallE = 0, wallW = 0, wallS = 0;
 	if (dir == North) {

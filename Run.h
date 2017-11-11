@@ -39,6 +39,11 @@ char checkSensor2Off(char RorL, char bool) {
 		}
 	}
 }
+float existRightWall = 450;  //壁切れの予備
+float existLeftWall = 750;   //壁切れの予備
+
+float existRightWall3 = 150; //壁切れの予備
+float existLeftWall3 = 150;  //壁切れの予備
 
 char checkUp(char RorL) {
 	if (RorL == R) {
@@ -92,6 +97,9 @@ char checkDown3(char RorL) {
 //		/*&& (sen_log_l[2] < sen_log_l[3]) && (sen_log_l[3] < sen_log_l[4])*/;
 //	}
 //}
+
+float existRightWall2 = 400; //壁切れの予備 斜め
+float existLeftWall2 = 400;  //壁切れの予備 斜め
 
 char checkUp2(char RorL) {
 	if (RorL == R) {
@@ -443,18 +451,22 @@ char roll(char RorL, float Angle, float w_max, float al) {
 	mtu_stop();
 	return 1;
 }
+float FRONT_CTRL_R = 575;   //前壁補正
+float FRONT_CTRL_L = 481;	//前壁補正
+float RF_WALL_EXIST2 = 320; //前壁補正　開始
+float LF_WALL_EXIST2 = 320;   //前壁補正　開始
 char frontCtrl() {
-//	return 1;
 	char tmp = sensingMode;
-	if (LF_SEN1.now > LF_WALL_EXIST2 && RF_SEN1.now > RF_WALL_EXIST2) {
+	if (LF_SEN1.now > LF_WALL_EXIST2 || RF_SEN1.now > RF_WALL_EXIST2) {
 		sensingMode = SearchMode;
 		while (RF_SEN1.now < FRONT_CTRL_R && LF_SEN1.now < FRONT_CTRL_L)
 			;
 		sensingMode = tmp;
-//		cmtMusic(C4_, 250);
 	}
 	return 1;
 }
+float FRONT_CTRL_R4 = 1670;   //前壁補正
+float FRONT_CTRL_L4 = 1530;	//前壁補正
 char frontCtrl4() {
 	char tmp = sensingMode;
 	while (RF_SEN1.now < FRONT_CTRL_R4 && LF_SEN1.now < FRONT_CTRL_L4)
@@ -600,27 +612,27 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 //			running2(Velocity, 4000, 90 + 49, 1);
 //			return 1;
 //		} else
-		if (LF_SEN1.now > 520 || RF_SEN1.now > 580) {
-			realRun3(Velocity, 3500, 3500, 60, 40);
-			frontCtrl4();
-
-			frontWallCtrl = true;
-			cmt_wait(500);
-			frontWallCtrl = false;
-
-			mtu_stop();
-			cmt_wait(50);
-			if (RorL == R) {
-				gyroRoll(L, 90, 30, 30);
-			} else {
-				gyroRoll(R, 90, 30, 30);
-			}
-			back(-200, -2000, 40, 0);
-			cmt_wait(50);
-			mtu_start();
-			running2(Velocity, 4000, 90 + 40, 1);
-			return 1;
-		}
+//		if (LF_SEN1.now > 550 || RF_SEN1.now > 600) {
+//			realRun3(Velocity, 3500, 3500, 60, 40);
+//			frontCtrl4();
+//
+//			frontWallCtrl = true;
+//			cmt_wait(500);
+//			frontWallCtrl = false;
+//
+//			mtu_stop();
+//			cmt_wait(50);
+//			if (RorL == R) {
+//				gyroRoll(L, 90, 30, 30);
+//			} else {
+//				gyroRoll(R, 90, 30, 30);
+//			}
+//			back(-200, -2000, 40, 0);
+//			cmt_wait(50);
+//			mtu_start();
+//			running2(Velocity, 4000, 90 + 40, 1);
+//			return 1;
+//		}
 	}
 	float error = check_sen_error();
 	float offset = 0;
@@ -658,8 +670,8 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 	readGyroParam();
 //	readGyroParam2();
 	readAngleParam();
-	ang = 0;
-	angle = 0;
+//	ang = 0;
+//	angle = 0;
 //	Se.error_delta = 0;
 //	Se.error_old = 0;
 	sinCount = 1;
@@ -726,6 +738,113 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 			}
 		}
 	}
+
+	if (RorL == L) {
+		angle -= rad;
+		ang -= rad;
+	} else {
+		angle += rad;
+		ang += rad;
+	}
+
+	cc = 0;
+	alpha = 0;
+	W_now = 0;
+	return 1;
+}
+
+char slalom4(char RorL, char type, float Velocity, float Velocity2, float ac) {
+	float radius = getRadius(type);
+	float rad = toRadians(getTargetAngle(type));
+	float time = getNaiperTime(type);
+	etN = getNaiperN(type);
+	w_now = 0;
+	W_now = 0;
+
+	if (RorL == R) {
+		G.th = gyroTh_R;
+	} else {
+		G.th = gyroTh_L;
+	}
+	if (type == Normal) {
+		frontCtrl();
+	}
+	if (dia == 0) {
+		if (!running(Velocity, 0, getFrontDistance(type, RorL), 1)) {
+			return 0;
+		}
+	} else {
+		if (!running(Velocity, 0, getFrontDistance(type, RorL), 0)) {
+			return 0;
+		}
+	}
+	rotate_r = rotate_l = true;
+	friction_str = true;
+	friction_roll = true;
+	sinCount = 0;
+	readGyroParam();
+	readAngleParam();
+	sinCount = 1;
+	alphaMode = 1;
+	alphaTemp = RorL == R ? (-Velocity / radius) : (Velocity / radius);
+	cc = 1;
+	slaTerm = time;
+	while (1) {
+		if (!fail) {
+			positionControlValueFlg = 0;
+			runFlg = 0;
+			return 0;
+		}
+		if (dt * sinCount / time < 2.0) {
+
+		} else {
+			alpha = 0;
+			alphaMode = 0;
+			alphaTemp = 0;
+			slaTerm = 0;
+			omegaTemp = 0;
+			W_now = 0;
+			if (RorL == L) {
+				angle = rad;
+			} else {
+				angle = -rad;
+			}
+			break;
+		}
+		if (type != Dia90) {
+			if (!fail) {
+				alphaMode = 0;
+				alphaTemp = 0;
+				slaTerm = 0;
+				omegaTemp = 0;
+				return 0;
+			}
+		}
+	}
+	fail = 1;
+	if (dia == 0 && (type == Dia45 || type == Dia135)) {
+		dia = 1;
+	} else if (dia == 1 && (type == Dia45 || type == Dia135)) {
+		dia = 0;
+	}
+	if (dia == 0) {
+		if (!targetRun(Velocity2, ac, getBackDistance_v2(type, RorL), 1, rad)) {
+			return 0;
+		}
+	} else {
+		if (!targetRun(Velocity2, ac, getBackDistance_v2(type, RorL), 0, rad)) {
+			return 0;
+		}
+	}
+
+	if (RorL == L) {
+		angle -= rad;
+		ang -= rad;
+	} else {
+		angle += rad;
+		ang += rad;
+	}
+
 	cc = 0;
 	alpha = 0;
 	W_now = 0;
@@ -831,6 +950,7 @@ char orignalRun(float v1, float v2, float ac, float diac, float dist) {
 	runFlg = 1;
 	originalDiaMode = true;
 	peekSideR = peekSideL = 0;
+	cc = 1;
 	while (ABS(distance) < ABS(dist)) {
 		if (startDecrease(R)) {
 			peekSideR = RS_SEN1.now;
@@ -858,16 +978,16 @@ char orignalRun(float v1, float v2, float ac, float diac, float dist) {
 				V_now = v1;
 			} else {
 				if (V_now > 4925) {
-					acc = ac * 0.25;
-				} else if (V_now > 4900) {
 					acc = ac * 0.5;
-				} else if (V_now > 4800) {
+				} else if (V_now > 4900) {
 					acc = ac * 0.65;
-				} else if (V_now > 4500) {
+				} else if (V_now > 4800) {
 					acc = ac * 0.75;
-				} else if (V_now > 4000) {
+				} else if (V_now > 4500) {
 					acc = ac * 0.85;
-				} else if (V_now > 3000) {
+//				} else if (V_now > 4000) {
+//					acc = ac * 0.85;
+//				} else if (V_now > 3000) {
 					acc = ac * 0.9;
 				} else {
 					acc = ac;
@@ -895,9 +1015,11 @@ char orignalRun(float v1, float v2, float ac, float diac, float dist) {
 			tmpDiac = 0;
 			targetVelocity = 0;
 			peekSideR = peekSideL = 0;
+			cc = 0;
 			return 0;
 		}
 	}
+	cc = 0;
 	peekSideR = peekSideL = 0;
 	alpha = 0;
 	acc = 0;
@@ -992,10 +1114,10 @@ char goStraight(float vmax, float term, float dist, char bool, char control) {
 	alpha = 0;
 	W_now = 0;
 	W_now2 = 0;
-	ang = 0;
-	angle = 0;
+//	ang = 0;
+//	angle = 0;
 	C.g = 0;
-	Gy.error_old = 0;
+//	Gy.error_old = 0;
 	Gy.error_delta = 0;
 	sinCount = 0;
 	positionControlValueFlg = control;
@@ -1020,6 +1142,9 @@ char goStraight(float vmax, float term, float dist, char bool, char control) {
 	positionControlValueFlg = 0;
 	return 1;
 }
+
+unsigned int R_WALL3 = 430;
+unsigned int L_WALL3 = 590;
 char running3(float vmax, float ACC, float dist, char control);
 char running2(float vmax, float ACC, float dist, char control) {
 //	return running(MAX, ACC, dist, control);
@@ -1049,11 +1174,17 @@ char running2(float vmax, float ACC, float dist, char control) {
 	V_max = vmax;
 //	G.th = gyroTh_R;
 	runFlg = 1;
-	char bool2 = checkSensor2Off(R, false);
-	char bool3 = checkSensor2Off(L, false);
+	char bool2 = RS_SEN1.now > R_WALL3; // checkSensorOff(R, false);
+	char bool3 = LS_SEN1.now > L_WALL3; // checkSensorOff(L, false);
 	char bool = bool2 | bool3;
 
+	if (check_sen_error2() > 0) {
+		Gy.error_old = 0;
+		angle = 0;
+		ang = 0;
+	}
 	while (distance < dist) {
+
 		if (ACC > 0) {
 			if (V_now < V_max) {
 			} else if (V_now >= V_max) {
@@ -1076,7 +1207,7 @@ char running2(float vmax, float ACC, float dist, char control) {
 					bool = false;
 					cmtMusic(10, 100);
 					distance = 0;
-					dist = 70 + 25;
+					dist = 70 + 27.75;
 					continue;
 				}
 			}
@@ -1086,7 +1217,7 @@ char running2(float vmax, float ACC, float dist, char control) {
 					bool = false;
 					cmtMusic(10, 100);
 					distance = 0;
-					dist = 70 + 25;
+					dist = 70 + 24.5;
 					continue;
 				}
 			}

@@ -944,7 +944,7 @@ char Adachi2(int GoalX, int GoalY, char Zen, char isFull) {
 	if (!dia) {
 		frontCtrl2();
 	}
-	frontCtrl4();
+//	frontCtrl4();
 	mtu_stop();
 //	gyroRoll(L, 180, 60, 80);
 //	back(-300, -500, 100, 0);
@@ -954,18 +954,18 @@ char Adachi2(int GoalX, int GoalY, char Zen, char isFull) {
 	} else {
 //		coin(100);
 	}
-	if (now_dir == North) {
-		now_dir = South;
-	} else if (now_dir == East) {
-		now_dir = West;
-	} else if (now_dir == West) {
-		now_dir = East;
-	} else if (now_dir == South) {
-		now_dir = North;
-	}
-	if (Zen == Kata) {
-		return false;
-	}
+//	if (now_dir == North) {
+//		now_dir = South;
+//	} else if (now_dir == East) {
+//		now_dir = West;
+//	} else if (now_dir == West) {
+//		now_dir = East;
+//	} else if (now_dir == South) {
+//		now_dir = North;
+//	}
+//	if (Zen == Kata) {
+//		return false;
+//	}
 	return true;
 }
 char Adachi3(int GoalX, int GoalY, char Zen, char isFull) {
@@ -984,12 +984,12 @@ char Adachi3(int GoalX, int GoalY, char Zen, char isFull) {
 	char oflg = true;
 	char tmpSave = false;
 	char goaled = false;
-	float velocity = 600;
+	float velocity = 500;
 	sensingMode = SearchMode;
 	map[0][0] |= 0xf0;
 	updateDist(GoalX, GoalY, 0, isFull);
 //	back(-100, -2000, 60, 0);
-	gyroZeroCheck(false);
+	gyroZeroCheck(true);
 //	startVacume2(70);
 	mtu_start();
 
@@ -1048,7 +1048,7 @@ char Adachi3(int GoalX, int GoalY, char Zen, char isFull) {
 						updateDist(GoalX, GoalY, 0, isFull);
 						if (GoalX == 0 && GoalY == 0) {
 							lock = true;
-//							break;
+							break;
 							continue;
 						}
 					}

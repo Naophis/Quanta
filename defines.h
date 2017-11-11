@@ -281,7 +281,7 @@ volatile vector_map m[MAZE_SIZE][MAZE_SIZE];
 
 #define Q_LENGTH 2048
 int que[Q_LENGTH][3];
-#define L_Length 2000
+#define L_Length 3000
 volatile int log1[L_Length];
 volatile float logs2[L_Length];
 volatile float log3[L_Length];

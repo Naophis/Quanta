@@ -16,9 +16,11 @@ void inputParameters2(char type, float frontLeft, float frontLeft2) {
 		break;
 	case Large:
 		pLarge.frontLeft1 = frontLeft;
+		pLarge.frontLeft2 = frontLeft2;
 		break;
 	case Orval:
 		pOrval.frontLeft1 = frontLeft;
+		pOrval.frontLeft2 = frontLeft2;
 		break;
 	case Dia45:
 		pD45.frontLeft1 = frontLeft;
@@ -30,9 +32,11 @@ void inputParameters2(char type, float frontLeft, float frontLeft2) {
 		break;
 	case Dia90:
 		pD90.frontLeft1 = frontLeft;
+		pD90.frontLeft2 = frontLeft2;
 		break;
 	case Kojima:
 		pKojima.frontLeft1 = frontLeft;
+		pKojima.frontLeft2 = frontLeft2;
 		break;
 	}
 }
@@ -44,6 +48,7 @@ void inputParameters(char type, float targetAngle, float radius, float front1,
 		pNormal.radius = radius;
 		pNormal.front1 = front1;
 		pNormal.back1 = back1;
+		pNormal.front2 = front2;
 		pNormal.time = time;
 		pNormal.n = n;
 		pNormal.velocity = v;
@@ -53,6 +58,7 @@ void inputParameters(char type, float targetAngle, float radius, float front1,
 		pLarge.radius = radius;
 		pLarge.front1 = front1;
 		pLarge.back1 = back1;
+		pLarge.front2 = front2;
 		pLarge.time = time;
 		pLarge.n = n;
 		pLarge.velocity = v;
@@ -62,6 +68,7 @@ void inputParameters(char type, float targetAngle, float radius, float front1,
 		pOrval.radius = radius;
 		pOrval.front1 = front1;
 		pOrval.back1 = back1;
+		pOrval.front2 = front2;
 		pOrval.time = time;
 		pOrval.n = n;
 		pOrval.velocity = v;
@@ -233,8 +240,10 @@ void save() {
 	vs[Normal][1] = pNormal.radius;
 	vs[Normal][2] = pNormal.front1;
 	vs[Normal][3] = pNormal.back1;
+
 	vs[Normal][6] = pNormal.time;
 	vs[Normal][7] = pNormal.n;
+
 	vs[Normal][8] = pNormal.velocity;
 	vs[Normal][9] = pNormal.frontLeft1;
 	vs[Normal][10] = pNormal.frontLeft2;
@@ -474,7 +483,59 @@ float getFrontDistance(char type, char RorL) {
 	}
 	return 0;
 }
-
+float getBackDistanceLeft(char type) {
+	switch (type) {
+	case Normal:
+		return pNormal.frontLeft2;
+	case Large:
+		return pLarge.frontLeft2;
+	case Orval:
+		return pOrval.frontLeft2;
+	case Dia45:
+		if (dia == 1) {
+			return pD45.frontLeft1;
+		}
+		return pD45.frontLeft2;
+	case Dia135:
+		if (dia == 1) {
+			return pD135.frontLeft1;
+		}
+		return pD135.frontLeft2;
+	case Dia90:
+		return pD90.frontLeft2;
+	case Kojima:
+		return pKojima.frontLeft2;
+	}
+	return 0;
+}
+float getBackDistance_v2(char type, char RorL) {
+	if (RorL == L) {
+		return getBackDistanceLeft(RorL);
+	}
+	switch (type) {
+	case Normal:
+		return pNormal.back1;
+	case Large:
+		return pLarge.back1;
+	case Orval:
+		return pOrval.back1;
+	case Dia45:
+		if (dia == 1) {
+			return pD45.back1;
+		}
+		return pD45.back2;
+	case Dia135:
+		if (dia == 1) {
+			return pD135.back1;
+		}
+		return pD135.back2;
+	case Dia90:
+		return pD90.back1;
+	case Kojima:
+		return pKojima.back1;
+	}
+	return 0;
+}
 float getBackDistance(char type, char RorL) {
 	switch (type) {
 	case Normal:

@@ -839,7 +839,7 @@ float turnVelocity(char a) {
 	if (a != Finish) {
 		return v_sla[a];
 	}
-	return 2000;
+	return 1800;
 }
 float turnVelocitySlow(char a) {
 	if (a != Finish) {

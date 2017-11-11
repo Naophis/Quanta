@@ -54,6 +54,7 @@ typedef struct {
 	float error_now;
 	float error_old;
 	float error_delta;
+	float before;
 } t_Errors;
 volatile t_Errors Se, Se2, Se3, Vr, Vl, Gy, Velocity, W_enc, Wl, Angle, SeFrntL,
 		SeFrnt, SeFrntAngle;

@@ -67,32 +67,25 @@ void enc_to_vel(void) {
 	Velocity.error_now = V_now - (V_Enc.r + V_Enc.l) / 2;
 	distance += ABS(V_Enc.r + V_Enc.l) * dt / 2;
 }
+#define KIREME_R 11 //11/12
+#define KIREME_L 11
+#define KIREME_R2 10
+#define KIREME_L2 10
+unsigned int R_WALL = 450; //#define R_WALL 4000	//サーキット用
+unsigned int L_WALL = 550;	//制御壁閾値
+float FRONT_OUT_R = 1100;	//袋小路時前センサー閾値
+float FRONT_OUT_L = 1100;	//袋小路時前センサー閾値
 
 int checkStr = 0;
 float check_sen_error(void) {
 	int error = 0;
 	char check = 0;
-	if (ABS(RS_SEN1.now - RS_SEN1.old) < KIREME_R2) {
-		wallCut_R = 1;
-	} else {
-		wallCut_R = 1;
-	}
-	if (ABS(LS_SEN1.now - LS_SEN1.old) < KIREME_L2) {
-		wallCut_L = 1;
-	} else {
-		wallCut_L = 1;
-	}
 	if (ABS(RS_SEN1.now - RS_SEN1.old) < KIREME_R) {
 		if (RS_SEN1.now > R_WALL) {
 			if (RF_SEN1.now < FRONT_OUT_R) {
 				error += RS_SEN1.now - RS_SEN1.ref;
 				check++;
 			}
-		}
-	} else {
-		if (RS_SEN1.now > (R_WALL + orderup_r)) {
-			error += RS_SEN1.now - RS_SEN1.ref;
-			check++;
 		}
 	}
 	if (ABS(LS_SEN1.now - LS_SEN1.old) < KIREME_L) {
@@ -113,23 +106,23 @@ float check_sen_error(void) {
 	if (check == 0) {
 		Se.error_old = 0;
 	} else {
-		Angle.error_old = 0;
+//		Angle.error_old = 0;
 		Gy.error_old = 0;
 		angle = 0;
 		ang = 0;
-		if (ABS(error) > W_ENCORDER_LIMIT) {
-			W_enc.error_old = 0;
-			Gy.error_old = 0;
-		}
-		if (ABS(Se.error_now) > 100) {
-			checkStr++;
-			Angle.error_old = 0;
-			Gy.error_old = 0;
-			angle = 0;
-			ang = 0;
-		} else {
-			checkStr = 0;
-		}
+//		if (ABS(error) > W_ENCORDER_LIMIT) {
+//			W_enc.error_old = 0;
+//			Gy.error_old = 0;
+//		}
+//		if (ABS(Se.error_now) > 7) {
+//			Gy.error_old = 0;
+//		}
+	}
+
+	if (check == 2) {
+//		Gy.error_old = 0;
+//		angle = 0;
+//		ang = 0;
 	}
 
 	if (check != 0) {
@@ -142,6 +135,33 @@ float check_sen_error(void) {
 		return error;
 	}
 	return 2 * error;
+}
+float check_sen_error2(void) {
+	int error = 0;
+	char check = 0;
+	if (ABS(RS_SEN1.now - RS_SEN1.old) < KIREME_R) {
+		if (RS_SEN1.now > R_WALL) {
+			if (RF_SEN1.now < FRONT_OUT_R) {
+				check++;
+			}
+		}
+	} else {
+		if (RS_SEN1.now > (R_WALL + orderup_r)) {
+			check++;
+		}
+	}
+	if (ABS(LS_SEN1.now - LS_SEN1.old) < KIREME_L) {
+		if (LS_SEN1.now > L_WALL) {
+			if (LF_SEN1.now < FRONT_OUT_L) {
+				check++;
+			}
+		}
+	} else {
+		if (LS_SEN1.now > (L_WALL + orderup_l)) {
+			check++;
+		}
+	}
+	return check;
 }
 #define KIREME_R_BACK 100
 #define KIREME_L_BACK 100
@@ -253,6 +273,9 @@ int check_sen_error_dia_side(void) {
 	}
 	return 2 * error;
 }
+float RF_WALL_FrontCTRL = 520; //斜め時 姿勢制御閾値(壁ナシ）
+float LF_WALL_FrontCTRL = 450; //斜め時 姿勢制御閾値(壁ナシ）
+
 float check_sen_error_dia_FrontCtrl() {
 	int error = 0;
 	if (RF_SEN1.now > RF_WALL_FrontCTRL && RF_SEN1.now < 4500) {
@@ -288,58 +311,30 @@ float check_sen_error_dia_FrontCtrl2() {
 	}
 	return error;
 }
+float R_WALL_dia = 400;	//斜め時 横壁のアリ判定
+float L_WALL_dia = 400;	//斜め時 横壁のアリ判定
+
+float RF_WALL1 = 210; //斜め時 姿勢制御閾値(壁ナシ）
+float LF_WALL1 = 260; //斜め時 姿勢制御閾値(壁ナシ）
+#define KIREME_R_DIA 40
+#define KIREME_L_DIA 40
+float RF_WALL = 210; //斜め時 姿勢制御閾値(壁アリ）
+float LF_WALL = 260;  //斜め時 姿勢制御閾値(壁アリ）
+
 int check_sen_error_dia(void) {
 	int error = 0;
 	char check = 0;
-	if (RS_SEN1.now > R_WALL_dia) {
-		if (ABS(RF_SEN1.now - RF_SEN1.old) < KIREME_R_DIA) {
-			if (RF_SEN1.now > RF_WALL1 && isIncreaseFront(R)) {
-				error += RF_SEN1.now - RF_SEN1.ref2;
-				check++;
-			}
-		} else {
-			if (RF_SEN1.now > (RF_WALL1 + orderup_r) && isIncreaseFront(R)) {
-				error += RF_SEN1.now - RF_SEN1.ref2;
-				check++;
-			}
-		}
-	} else {
-		if (ABS(RF_SEN1.now - RF_SEN1.old) < KIREME_R_DIA) {
-			if (RF_SEN1.now > RF_WALL && isIncreaseFront(R)) {
-				error += RF_SEN1.now - RF_SEN1.ref;
-				check++;
-			}
-		} else {
-			if (RF_SEN1.now > (RF_WALL + orderup_r) && isIncreaseFront(R)) {
-				error += RF_SEN1.now - RF_SEN1.ref;
-				check++;
-			}
+	if (ABS(RF_SEN1.now - RF_SEN1.old) < KIREME_R_DIA) {
+		if (RF_SEN1.now > RF_WALL) {
+			error += RF_SEN1.now - RF_SEN1.ref;
+			check++;
 		}
 	}
 
-	if (LS_SEN1.now > L_WALL_dia) {
-		if (ABS(LF_SEN1.now - LF_SEN1.old) < KIREME_L_DIA) {
-			if (LF_SEN1.now > LF_WALL1 && isIncreaseFront(L)) {
-				error -= LF_SEN1.now - LF_SEN1.ref2;
-				check++;
-			}
-		} else {
-			if (LF_SEN1.now > (LF_WALL1 + orderup_l) && isIncreaseFront(L)) {
-				error -= LF_SEN1.now - LF_SEN1.ref2;
-				check++;
-			}
-		}
-	} else {
-		if (ABS(LF_SEN1.now - LF_SEN1.old) < KIREME_L_DIA) {
-			if (LF_SEN1.now > LF_WALL1 && isIncreaseFront(L)) {
-				error -= LF_SEN1.now - LF_SEN1.ref;
-				check++;
-			}
-		} else {
-			if (LF_SEN1.now > (LF_WALL + orderup_l) && isIncreaseFront(L)) {
-				error -= LF_SEN1.now - LF_SEN1.ref;
-				check++;
-			}
+	if (ABS(LF_SEN1.now - LF_SEN1.old) < KIREME_L_DIA) {
+		if (LF_SEN1.now > LF_WALL1) {
+			error -= LF_SEN1.now - LF_SEN1.ref;
+			check++;
 		}
 	}
 
@@ -350,7 +345,7 @@ int check_sen_error_dia(void) {
 		Se.error_old = 0;
 //		error = errorOld_dia;
 	} else {
-		Gy.error_old = 0;
+//		Gy.error_old = 0;
 //		angle = 0;
 //		ang = 0;
 	}
@@ -358,7 +353,7 @@ int check_sen_error_dia(void) {
 
 	if (check != 0) {
 		errorFlg = 1;
-		globalError = error;
+//		globalError = error;
 	} else {
 		errorFlg = 0;
 	}
@@ -381,16 +376,18 @@ void errorVelocity(void) {
 	if (positionControlValueFlg == 1) {
 		if (dia == 0) {
 			Se.error_now = check_sen_error();
+			Se.error_delta = Se.error_now - Se.before;
 			C.s = Sen.Kp * Se.error_now + Sen.Ki * Se.error_old
 					+ Sen.Kd * Se.error_delta;
-//			C.s = (D1 + k1 / k2 * (V_Enc.r + V_Enc.l) / 2000) * settleGyro
-//					+ P / k2 * Se.error_now;
+			Se.before = Se.error_now;
 		} else if (dia == 1) {
 			Se.error_now = check_sen_error_dia();
+			Se.error_delta = Se.error_now - Se.before;
 			if (Se.error_now != 0) {
 				C.s = Sen_Dia.Kp * Se.error_now + Sen_Dia.Ki * Se.error_old
 						+ Sen_Dia.Kd * Se.error_delta;
 			}
+			Se.before = Se.error_now;
 
 			Se2.error_now = check_sen_error_dia_side();
 			C.s2 = 0;
@@ -563,7 +560,7 @@ void dutyCalcuration2(void) {
 //	Duty_r = (ffL + FB_straight_duty + FB_pararell_duty) / battery * 100;
 //	Duty_l = (ffR + FB_straight_duty - FB_pararell_duty) / battery * 100;
 
-//	dutyR = dutyL = 30;
+//	dutyR = dutyL = 60;
 	Duty_r = dutyR;
 	Duty_l = dutyL;
 	changeRotation(dutyR, R);	//R_CW/CCW

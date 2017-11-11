@@ -329,7 +329,7 @@ void startVacume2(int duty) {
 	GPT2.GTCCRA = GPT2.GTCCRC = M_CYCLE2 * duty / 100;
 	fanStart = true;
 	GPT.GTSTR.BIT.CST2 = 1;
-	cmt_wait(1000);
+	cmt_wait(1500);
 }
 void startVacume() {
 	GPT2.GTPR = M_CYCLE2;

@@ -24,6 +24,7 @@
 
 #include "Run.h"
 #include "WallOff.h"
+#include "WallOff2.h"
 #include "Map.h"
 #include "Search.h"
 #include "VectorSearch.h"
@@ -173,15 +174,15 @@ void mtu4_A() {
 		if (mpu) {
 			callMpu(0x47);
 		}
-		PORT2.PODR.BIT.B7 = 1; //RS1
-		PORT2.PODR.BIT.B5 = 1; //LS1
+		//		PORTD.PODR.BIT.B7 = 1; //RS2
+		//		PORT2.PODR.BIT.B4 = 1; //LS2
 		break;
 	case 3:
 		if (mpu) {
 			callMpu(0x47);
 		}
-		PORTD.PODR.BIT.B7 = 1; //RS2
-		PORT2.PODR.BIT.B4 = 1; //LS2
+		PORT2.PODR.BIT.B7 = 1; //RS1
+		PORT2.PODR.BIT.B5 = 1; //LS1
 		break;
 	case 4:
 		if (mpu) {
@@ -202,7 +203,8 @@ void getBattery() {
 	batteryOld = battery;
 }
 int gyros[4];
-
+unsigned int R_WALL4 = 50;
+unsigned int L_WALL4 = 180;
 void mtu4_B() {
 	switch (tpu_count) {
 	case 1:
@@ -210,11 +212,11 @@ void mtu4_B() {
 		gyros[0] = getMpuData();
 		break;
 	case 2:
-		sensing_side();
+		sensing_side2();
 		gyros[1] = getMpuData();
 		break;
 	case 3:
-		sensing_side2();
+		sensing_side();
 		gyros[2] = getMpuData();
 		break;
 	case 4:
@@ -285,17 +287,17 @@ void mtu4_B() {
 		sen_l[1] = sen_l[0];
 		sen_l[0] = LS_SEN1.now > L_WALL3;
 
-		sen_r2[4] = sen_r2[3];
-		sen_r2[3] = sen_r2[2];
-		sen_r2[2] = sen_r2[1];
-		sen_r2[1] = sen_r2[0];
-		sen_r2[0] = RS_SEN2.now > R_WALL4;
-
-		sen_l2[4] = sen_l2[3];
-		sen_l2[3] = sen_l2[2];
-		sen_l2[2] = sen_l2[1];
-		sen_l2[1] = sen_l2[0];
-		sen_l2[0] = LS_SEN2.now > L_WALL4;
+//		sen_r2[4] = sen_r2[3];
+//		sen_r2[3] = sen_r2[2];
+//		sen_r2[2] = sen_r2[1];
+//		sen_r2[1] = sen_r2[0];
+//		sen_r2[0] = RS_SEN2.now > R_WALL4;
+//
+//		sen_l2[4] = sen_l2[3];
+//		sen_l2[3] = sen_l2[2];
+//		sen_l2[2] = sen_l2[1];
+//		sen_l2[1] = sen_l2[0];
+//		sen_l2[0] = LS_SEN2.now > L_WALL4;
 		break;
 	}
 	sensor_led_off();

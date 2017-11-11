@@ -8,7 +8,7 @@
 #ifndef PARAMDEF_H_
 #define PARAMDEF_H_
 
-#define TIRE 24.625f
+#define TIRE 24.975f
 const float WHEEL = TIRE / 2000;
 const float GEAR = 63.0 / 19.0;
 #define DUTY_MAX 90.0f
@@ -38,98 +38,20 @@ float Vkp_r, Vki_r, Vkd_r;
 float Vkp_l, Vki_l, Vkd_l;
 float Vkp, Vki, Vkd;
 
-#define KIREME_R 25 //11/12
-#define KIREME_L 25
-
-//#define KIREME_R 11 //11/12
-//#define KIREME_L 11
-
 #define orderup_r 4000
 #define orderup_l 4000
 #define supR_WALL 2000
 #define supL_WALL 2000
 
-unsigned int R_WALL = 380; //#define R_WALL 4000	//サーキット用
-unsigned int L_WALL = 530;	//制御壁閾値
-
-unsigned int R_WALL3 = 340;
-unsigned int L_WALL3 = 530;
-
-unsigned int R_WALL4 = 50;
-unsigned int L_WALL4 = 180;
-
-#define KIREME_R2 10
-#define KIREME_L2 10
-#define KIREME_R_DIA 200
-#define KIREME_L_DIA 200
-#define KIREME_R_DIA_SIDE 20
-#define KIREME_L_DIA_SIDE 20
+//#define KIREME_R_DIA_SIDE 20
+//#define KIREME_L_DIA_SIDE 20
 
 /**
  * ↓　迷路・壁に依存する　調整パラメータ
  */
 
-float R_WALL_EXIST = 330;  //探索時壁判定
-float L_WALL_EXIST = 400;  //探索時壁判定
-float RF_WALL_EXIST = 400; //探索時壁判定
-float LF_WALL_EXIST = 360; //探索時壁判定
-
-float FRONT_CTRL_R = 520;   //前壁補正
-float FRONT_CTRL_L = 440;	//前壁補正
-float RF_WALL_EXIST2 = 350; //前壁補正　開始
-float LF_WALL_EXIST2 = 320;   //前壁補正　開始
-
-float FRONT_CTRL_R4 = 1450;   //前壁補正
-float FRONT_CTRL_L4 = 1345;	//前壁補正
-float RF_WALL_EXIST4 = 450; //前壁補正　開始
-float LF_WALL_EXIST4 = 50;   //前壁補正　開始
-
 float wallhosei = 100;
 
-float RF_WALL1 = 210; //斜め時 姿勢制御閾値(壁ナシ）
-float LF_WALL1 = 260; //斜め時 姿勢制御閾値(壁ナシ）
-
-float RF_WALL = 210; //斜め時 姿勢制御閾値(壁アリ）
-float LF_WALL = 260;  //斜め時 姿勢制御閾値(壁アリ）
-
-float RS_WALL2 = 800; //斜め時 姿勢制御閾値(壁ナシ）
-float LS_WALL2 = 1200; //斜め時 姿勢制御閾値(壁ナシ）
-
-float RF_WALL_FrontCTRL = 520; //斜め時 姿勢制御閾値(壁ナシ）
-float LF_WALL_FrontCTRL = 450; //斜め時 姿勢制御閾値(壁ナシ）
-
-float R_WALL_dia = 400;	//斜め時 横壁のアリ判定
-float L_WALL_dia = 400;	//斜め時 横壁のアリ判定
-
-float R_WALL_OFF = 335;	//壁切れ　閾値
-float L_WALL_OFF = 480;	//壁切れ　閾値
-float R_WALL_OFF2 = 390;	//壁切れ　閾値
-float L_WALL_OFF2 = 572;	//壁切れ　閾値
-
-float R_WALL_OFF_D = 515;  //壁切れ　閾値　斜め用
-float L_WALL_OFF_D = 1080; //壁切れ　閾値　斜め用
-
-float R_WALL_OFF_D2 = 485;  //壁切れ　閾値　斜め用
-//float L_WALL_OFF_D2 = 1040; //壁切れ　閾値　斜め用
-float L_WALL_OFF_D2 = 740; //壁切れ　閾値　斜め用
-
-float FRONT_OUT_R = 1200;	//袋小路時前センサー閾値
-float FRONT_OUT_L = 1200;	//袋小路時前センサー閾値
-
-float existRightWall = 450;  //壁切れの予備
-float existLeftWall = 750;   //壁切れの予備
-
-float existRightWall2 = 400; //壁切れの予備 斜め
-float existLeftWall2 = 400;  //壁切れの予備 斜め
-
-float existRightWall3 = 150; //壁切れの予備
-float existLeftWall3 = 150;  //壁切れの予備
-
-float existRightWall4 = 250;  //壁切れの予備
-float existLeftWall4 = 500;   //壁切れの予備
-
-float existRightWall5 = 500;  //壁切れの予備
-float existLeftWall5 = 400;   //壁切れの予備
 /**
  * 調整以上
  */
@@ -165,37 +87,32 @@ void importParam() {
 	Vel.Ki = 0.00085;
 	Vel.Kd = 0.0;
 
-	Gyro.Kp = 0.975; //本来
-	Gyro.Ki = 0.025;
+//	Vel.Kp = 0.00325;
+//	Vel.Ki = 0.00125;
+//	Vel.Kd = 0.0;
+
+
+	Gyro.Kp = 1.25; //本来
+	Gyro.Ki = 0.01;
 
 //	Sen.Kp = 0.00245;
 //	Sen.Ki = 0.001;
 //	Sen.Kd = 0.00025;
 
-	Sen.Kp = 0.00275;
+	Sen.Kp = 0.0025;
 	Sen.Ki = 0.001;
-	Sen.Kd = 0.00025;
+	Sen.Kd = 0.065;
 
 //	Backs.Kp = 0.005;
 //	Backs.Ki = 0;
 //	Backs.Kd = 0;
 
-	Sen_Dia.Kp = 0.0045;
-	Sen_Dia_Side.Kp = 0.0005;
+//	Sen_Dia.Kp = 0.0075;
+//	Sen_Dia_Side.Kp = 0.0005;
 
-	Sen_Dia.Kp = 0.0075;
-//	Sen_Dia_Side.Kp = 0.00075;
+//	Sen_Dia.Kp = 0.0175;
+//	Sen_Dia_Side.Kp = 0.0005;
 
-//	Sen_Dia.Kp = 0.00;
-//	Sen_Dia_Side.Kp = 0.0;
-
-//	Sen_Dia.Kp = 0.00125;
-//	Sen_Dia_Side.Kp = 0.005;
-//	Sen_Dia.Kp = 0.00025;
-//	Sen_Dia_Side.Kp = 0.0001;
-
-//	Sen_Dia.Kp = 0.0005;
-//	Sen_Dia_Side.Kp = 0.001;
 
 	Vkp = Vel.Kp;
 	Vki = Vel.Ki;
@@ -208,21 +125,20 @@ void importParam() {
 	Akd = Angles.Kd;
 
 	// 直線中央値
-	RS_SEN1.ref = 536;
-	LS_SEN1.ref = 711;
+	RS_SEN1.ref = 562;
+	LS_SEN1.ref = 710;
+
 	// 直線中央値(斜め）
-	RS_SEN1.ref2 = 860;
-	LS_SEN1.ref2 = 1330;
+	RS_SEN1.ref2 = 1025;
+	LS_SEN1.ref2 = 1425;
 
 	// 斜め中央値　壁ナシ
-	RF_SEN1.ref = 200;
-	LF_SEN1.ref = 250;
+	RF_SEN1.ref = RF_SEN1.ref2 = 150;
+	LF_SEN1.ref = LF_SEN1.ref2 = 250;
 	// 斜め中央値　壁あり
-	RF_SEN1.ref2 = 190;
-	LF_SEN1.ref2 = 280;
 
-	RF_SEN1.ref3 = 1635;
-	LF_SEN1.ref3 = 1515;
+	RF_SEN1.ref3 = 1688;
+	LF_SEN1.ref3 = 1666;
 
 	wallhosei = 100;
 
