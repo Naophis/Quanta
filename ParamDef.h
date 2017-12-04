@@ -8,17 +8,19 @@
 #ifndef PARAMDEF_H_
 #define PARAMDEF_H_
 
-#define TIRE 24.975f
-const float WHEEL = TIRE / 2000;
-const float GEAR = 63.0 / 19.0;
-#define DUTY_MAX 90.0f
-#define Ke 0.000368613538f
-#define Km 0.00352f
-#define Resist 2.93f
-#define Mass 0.101f
-#define Lm 0.001f
-#define friction 0.00125f
-#define friction2 0.001925f
+float TIRE = 24.745f;
+float WHEEL;
+float GEAR_A;
+float GEAR_B;
+float GEAR = 63.0 / 19.0;
+float DUTY_MAX = 99.9f;
+float Ke = 0.000368613538f;
+float Km = 0.00352f;
+float Resist = 2.93f;
+float Mass = 0.101f;
+float Lm = 0.001f;
+float friction = 0.00125f;
+float friction2 = 0.001925f;
 
 #define W_ENCORDER_LIMIT 100
 #define W_ENCORDER_LIMIT2 10
@@ -65,54 +67,80 @@ int Dia2;
 int Dia3;
 int St2;
 int St3;
+
+void importFromDataFlash() {
+	TIRE = *(float *) 1049216;
+	myprintf("TIRE	%f	%d\r\n", TIRE, 1049216);
+	GEAR_A = *(float *) 1049220;
+	myprintf("GEAR_A	%f	%d\r\n", GEAR_A, 1049220);
+	GEAR_B = *(float *) 1049224;
+	myprintf("GEAR_B	%f	%d\r\n", GEAR_B, 1049224);
+	DUTY_MAX = *(float *) 1049228;
+	myprintf("DUTY_MAX	%f	%d\r\n", DUTY_MAX, 1049228);
+	Ke = *(float *) 1049232;
+	myprintf("Ke	%f	%d\r\n", Ke, 1049232);
+	Km = *(float *) 1049236;
+	myprintf("Km	%f	%d\r\n", Km, 1049236);
+	Resist = *(float *) 1049240;
+	myprintf("Resist	%f	%d\r\n", Resist, 1049240);
+	Mass = *(float *) 1049244;
+	myprintf("Mass	%f	%d\r\n", Mass, 1049244);
+	Lm = *(float *) 1049248;
+	myprintf("Lm	%f	%d\r\n", Lm, 1049248);
+	friction = *(float *) 1049252;
+	myprintf("friction	%f	%d\r\n", friction, 1049252);
+	friction2 = *(float *) 1049256;
+	myprintf("friction2	%f	%d\r\n", friction2, 1049256);
+
+	gyroTh_R = *(float *) 1049344;
+	myprintf("gyroTh_R	%f	%d\r\n", gyroTh_R, 1049344);
+	gyroTh_L = *(float *) 1049348;
+	myprintf("gyroTh_L	%f	%d\r\n", gyroTh_L, 1049348);
+	Vel.Kp = *(float *) 1049352;
+	myprintf("Vel.Kp	%f	%d\r\n", Vel.Kp, 1049352);
+	Vel.Ki = *(float *) 1049356;
+	myprintf("Vel.Ki	%f	%d\r\n", Vel.Ki, 1049356);
+	Vel.Kd = *(float *) 1049360;
+	myprintf("Vel.Kd	%f	%d\r\n", Vel.Kd, 1049360);
+	Gyro.Kp = *(float *) 1049364;
+	myprintf("Gyro.Kp	%f	%d\r\n", Gyro.Kp, 1049364);
+	Gyro.Ki = *(float *) 1049368;
+	myprintf("Gyro.Ki	%f	%d\r\n", Gyro.Ki, 1049368);
+	Gyro.Kd = *(float *) 1049372;
+	myprintf("Gyro.Kd	%f	%d\r\n", Gyro.Kd, 1049372);
+	Sen.Kp = *(float *) 1049376;
+	myprintf("Sen.Kp	%f	%d\r\n", Sen.Kp, 1049376);
+	Sen.Ki = *(float *) 1049380;
+	myprintf("Sen.Ki	%f	%d\r\n", Sen.Ki, 1049380);
+	Sen.Kd = *(float *) 1049384;
+	myprintf("Sen.Kd	%f	%d\r\n", Sen.Kd, 1049384);
+	Sen_Dia.Kp = *(float *) 1049388;
+	myprintf("Sen_Dia.Kp	%f	%d\r\n", Sen_Dia.Kp, 1049388);
+	Sen_Dia.Ki = *(float *) 1049392;
+	myprintf("Sen_Dia.Ki	%f	%d\r\n", Sen_Dia.Ki, 1049392);
+	Sen_Dia.Kd = *(float *) 1049396;
+	myprintf("Sen_Dia.Kd	%f	%d\r\n", Sen_Dia.Kd, 1049396);
+	FrontCtrl.Kp = *(float *) 1049400;
+	myprintf("FrontCtrl.Kp	%f	%d\r\n", FrontCtrl.Kp, 1049400);
+	FrontCtrl.Ki = *(float *) 1049404;
+	myprintf("FrontCtrl.Ki	%f	%d\r\n", FrontCtrl.Ki, 1049404);
+
+}
 void importParam() {
+	importFromDataFlash();
+	WHEEL = TIRE / 2000;
+	GEAR = GEAR_A / GEAR_B;
+
 	Dia2 = Dia - minus + 2;
 	Dia3 = Dia - minus + 1;
 	St2 = St1 - minus;
 	St3 = St1 - minus - 1;
 
-//	gyroTh_R = 0.00106065; 	// 2017/11/05
-//	gyroTh_L = 0.00106065;	// 2017/11/05
-
-	gyroTh_R = 0.00106435; //超新地
-	gyroTh_L = 0.00106375;
-
-	pivotR = gyroTh_R; //超新地
+	G.th = gyroTh_R;
+	pivotR = gyroTh_R;
 	pivotL = gyroTh_L;
 
-	G.th = gyroTh_R;
 	tempGyro = 0;
-
-	Vel.Kp = 0.00125;
-	Vel.Ki = 0.00085;
-	Vel.Kd = 0.0;
-
-//	Vel.Kp = 0.00325;
-//	Vel.Ki = 0.00125;
-//	Vel.Kd = 0.0;
-
-
-	Gyro.Kp = 1.25; //本来
-	Gyro.Ki = 0.01;
-
-//	Sen.Kp = 0.00245;
-//	Sen.Ki = 0.001;
-//	Sen.Kd = 0.00025;
-
-	Sen.Kp = 0.0025;
-	Sen.Ki = 0.001;
-	Sen.Kd = 0.065;
-
-//	Backs.Kp = 0.005;
-//	Backs.Ki = 0;
-//	Backs.Kd = 0;
-
-//	Sen_Dia.Kp = 0.0075;
-//	Sen_Dia_Side.Kp = 0.0005;
-
-//	Sen_Dia.Kp = 0.0175;
-//	Sen_Dia_Side.Kp = 0.0005;
-
 
 	Vkp = Vel.Kp;
 	Vki = Vel.Ki;
@@ -133,7 +161,7 @@ void importParam() {
 	LS_SEN1.ref2 = 1425;
 
 	// 斜め中央値　壁ナシ
-	RF_SEN1.ref = RF_SEN1.ref2 = 150;
+	RF_SEN1.ref = RF_SEN1.ref2 = 200;
 	LF_SEN1.ref = LF_SEN1.ref2 = 250;
 	// 斜め中央値　壁あり
 

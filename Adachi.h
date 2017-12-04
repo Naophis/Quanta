@@ -657,13 +657,13 @@ char Adachi2(int GoalX, int GoalY, char Zen, char isFull) {
 	char tmpSave = false;
 	char goaled = false;
 	int p = 0;
-	float velocity = 500;
+	float velocity = 1000;
 	sensingMode = SearchMode;
 	map[0][0] |= 0xf0;
 	updateDist(GoalX, GoalY, 0, isFull);
 //	back(-100, -2000, 60, 0);
 	gyroZeroCheck(true);
-//	startVacume2(70);
+	startVacume2(70);
 	mtu_start();
 
 //	running(500, 2000, 90.0 + 56, 1);
@@ -872,9 +872,8 @@ char Adachi2(int GoalX, int GoalY, char Zen, char isFull) {
 					gyroKeepFlg = 1;
 					realRun3(velocity, 3500, 3500, 100, 25);
 					mtu_stop();
-					gyroRoll(L, 180, 60, 80);
+					gyroRoll(L, 180, 120, 180);
 					back(-200, -2000, 50, 1);
-					cmt_wait(50);
 					if (isStepped(firstGoalX, firstGoalY)) {
 						if (nextMotion == Back && !lock
 								&& !(isStepped(GoalX, GoalY)
@@ -894,6 +893,7 @@ char Adachi2(int GoalX, int GoalY, char Zen, char isFull) {
 							oneUp(100);
 						}
 						tmpSave = true;
+						gyroZeroCheck(false);
 					}
 					mtu_start();
 					check = running2(velocity, 4000, 145/*115 90.0 + 56*/, 1);
@@ -901,7 +901,7 @@ char Adachi2(int GoalX, int GoalY, char Zen, char isFull) {
 				} else {
 					realRun3(velocity, 3500, 3500, 115, 25);
 					mtu_stop();
-					gyroRoll(L, 180, 60, 80);
+					gyroRoll(L, 180, 120, 180);
 					if (isStepped(firstGoalX, firstGoalY)) {
 						if (nextMotion == Back && !lock
 								&& !(isStepped(GoalX, GoalY)
@@ -922,6 +922,7 @@ char Adachi2(int GoalX, int GoalY, char Zen, char isFull) {
 //						}
 //						tmpSave = true;
 //					}
+					gyroZeroCheck(false);
 					mtu_start();
 					check = running2(velocity, 4000, 115.0, 1);
 				}

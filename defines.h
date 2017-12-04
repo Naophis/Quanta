@@ -49,8 +49,9 @@ char fanStart = false;
 char fanStart2 = false;
 //#define FAN_AMP2 10.50
 //#define FAN_AMP 10.50
-#define FAN_AMP2 11.0
+#define FAN_AMP2 8.0
 #define FAN_AMP 11.0	//11.35
+//#define FAN_AMP 11.0	//11.35
 const float PI = 3.141592653589793;
 
 #define TRANSAM PORT1.PODR.BIT.B5
@@ -318,6 +319,11 @@ volatile float log27[L_Length];
 #define CMT_CYCLE 4000 // 4kHz
 #define CMT_CYCLE2 2000 // 2kHz
 #define M_CYCLE2 500
+
+#define FastRun 0
+#define SearchRun 1
+
+volatile fanMode = SearchRun;
 
 volatile char rotate_r = true;
 volatile char rotate_l = true;

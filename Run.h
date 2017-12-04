@@ -651,12 +651,8 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 	}
 	offset = 0;
 	if (dia == 0) {
-		if (!frontSkip) {
-			if (!running(Velocity, 0, getFrontDistance(type, RorL), 1)) {
-				return 0;
-			}
-		} else {
-//			cmtMusic(G2_, 100);
+		if (!running(Velocity, 0, getFrontDistance(type, RorL), 1)) {
+			return 0;
 		}
 	} else {
 		if (!running(Velocity, 0, getFrontDistance(type, RorL), 0)) {
@@ -727,7 +723,6 @@ char slalom3(char RorL, char type, float Velocity, float Velocity2, float ac) {
 		if (type == Normal && offset != 0) {
 			float tmpDist = getBackDistance(type, RorL) + offset;
 			tmpDist = tmpDist > 0 ? tmpDist : 0;
-			//	cmtMusic(D2_, 250);
 			if (!targetRun(Velocity2, ac, tmpDist, 0, rad)) {
 				return 0;
 			}

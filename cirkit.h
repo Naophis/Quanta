@@ -12,7 +12,7 @@ void cirquit() {
 	cirquitMode = 1;
 	pathClear();
 	//////	//#define R_WALL 5025
-	char maxcicle = 4;
+	char maxcicle = 2;
 	for (char i = 0; i < 4 * maxcicle; i += 2) {
 		// 部室迷路サーキット #define R_WALLを4000にすること
 //		path_s[i] = 12;

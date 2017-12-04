@@ -37,7 +37,7 @@ void spi1MbpsMode() {
 	RSPI1.SPBR = 5;
 	RSPI1.SPCMD0.BIT.BRDV = 3;
 }
-char setupMpu6500() {
+volatile char setupMpu6500() {
 //	return true;
 	mpu = false;
 	cmt_wait(200);
@@ -50,10 +50,10 @@ char setupMpu6500() {
 	MPU6500_Write_1byte(0x1B, 0x18); //gyro config ジャイロのフルスケールを±2000°/s
 	cmt_wait(200);
 	short result = MPU6500_Read_1byte(117);
-	myprintf("%d\r\n", result);
+	myprintf("%d	%d\r\n", result, result == 152);
 	mpu = true;
 	cmt_wait(5);
-	return result == 152;
+	return result;
 }
 
 void Init_SPI(void) {
@@ -86,7 +86,8 @@ void Init_SPI(void) {
 	RSPI1.SPCMD2.WORD = RSPI1.SPCMD0.WORD;
 	RSPI1.SPCMD2.BIT.SSLKP = 0;	//CSをnegativeにする
 
-	RSPI1.SPBR =4;;
+	RSPI1.SPBR = 4;
+	;
 	RSPI1.SPCMD0.BIT.BRDV = 2;
 
 	IEN(RSPI1, SPTI1) = 1;
@@ -121,7 +122,7 @@ void Init_SPI(void) {
 
 	SYSTEM.PRCR.WORD = 0xA500;
 
-	while (!setupMpu6500())
+	while (setupMpu6500() != 152)
 		;
 }
 

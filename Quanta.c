@@ -221,11 +221,21 @@ void mtu4_B() {
 		break;
 	case 4:
 		if (fanStart) {
-			if ((FAN_AMP / battery) <= FAN_CYCLE) {
-				GPT2.GTCCRA = GPT2.GTCCRC =
-						(int) (FAN_AMP / battery * FAN_CYCLE);
+			if (fanMode == FastRun) {
+				if ((FAN_AMP / battery) <= FAN_CYCLE) {
+					GPT2.GTCCRA = GPT2.GTCCRC = (int) (FAN_AMP / battery
+							* FAN_CYCLE);
+				} else {
+					GPT2.GTCCRA = GPT2.GTCCRC = FAN_CYCLE;
+				}
 			} else {
-				GPT2.GTCCRA = GPT2.GTCCRC = FAN_CYCLE;
+				if ((FAN_AMP / battery) <= FAN_CYCLE) {
+					GPT2.GTCCRA = GPT2.GTCCRC = (int) (FAN_AMP2 / battery
+							* FAN_CYCLE);
+				} else {
+					GPT2.GTCCRA = GPT2.GTCCRC = FAN_CYCLE;
+				}
+
 			}
 		} else {
 			GPT2.GTCCRA = GPT2.GTCCRC = 0;
@@ -304,7 +314,6 @@ void mtu4_B() {
 }
 
 void initRX64M() {
-	importParam();
 	initClock();
 	initLED();
 	initSensorLED();
@@ -317,6 +326,8 @@ void initRX64M() {
 //	initGPT2();
 	Init_SPI();
 	init_Mtu4();
+	myprintf("Flash Open %d\r\n", R_FLASH_Open());
+	importParam();
 }
 void test() {
 	ComFlag = true;

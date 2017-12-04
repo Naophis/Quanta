@@ -546,6 +546,9 @@ float getBackDistance(char type, char RorL) {
 	case Large:
 		return pLarge.back1;
 	case Orval:
+		if (RorL == L) {
+			return pOrval.frontLeft2;
+		}
 		return pOrval.back1;
 	case Dia45:
 		if (dia == 1) {

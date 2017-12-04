@@ -474,8 +474,8 @@ void gyroZeroCheck(char bool) {
 	float tmpData = 0;
 	while (true) {
 		tmpData = getZeroPoint();
-		if (ABS(tmpData) < 0.1) {
-//			cmtMusic(G2_, 500);
+//		myprintf("%f\r\n", tmpData);
+		if (ABS(tmpData) < 0.01) {
 			while (!setupMpu6500())
 				;
 		} else if (ABS(tmpData) < 50) {
@@ -483,10 +483,6 @@ void gyroZeroCheck(char bool) {
 		}
 //		break;
 	}
-//	if (ABS(tmpData) < 0.5) {
-//		cmtMusic(G2_, 500);
-//		cmt_wait(5000);
-//	}
 	if (bool) {
 		coin(100);
 	}
@@ -839,7 +835,7 @@ float turnVelocity(char a) {
 	if (a != Finish) {
 		return v_sla[a];
 	}
-	return 1800;
+	return 2000;
 }
 float turnVelocitySlow(char a) {
 	if (a != Finish) {

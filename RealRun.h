@@ -52,12 +52,12 @@ char runForPath(float max, float ac, float diac) {
 	logs = 0;
 	for (i = 0; i < pathLength; i++) {
 		if (i == 0) {
-			wall_off_limit = 15000;
-			wall_off_limit_d = 50000;
+			wall_off_limit = 125000;
+			wall_off_limit_d = 125000;
 			dist = 0.5 * (path_s[i] - 1) - 1;
 		} else {
-			wall_off_limit = 20;
-			wall_off_limit_d = 20;
+			wall_off_limit = 30;
+			wall_off_limit_d = 25;
 
 			dist = 0.5 * path_s[i] - 1;
 		}
@@ -235,7 +235,7 @@ char runForPath_v2(float max, float ac, float diac) {
 			return 0;
 		}
 	}
-	running(150, -diac, 90, 1);
+	running(150, -diac, 120, 1);
 
 	if (!dia) {
 		frontCtrl2();

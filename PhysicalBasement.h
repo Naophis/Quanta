@@ -71,8 +71,8 @@ void enc_to_vel(void) {
 #define KIREME_L 11
 #define KIREME_R2 10
 #define KIREME_L2 10
-unsigned int R_WALL = 450; //#define R_WALL 4000	//サーキット用
-unsigned int L_WALL = 550;	//制御壁閾値
+unsigned int R_WALL = 500; //#define R_WALL 4000	//サーキット用
+unsigned int L_WALL = 650;	//制御壁閾値
 float FRONT_OUT_R = 1100;	//袋小路時前センサー閾値
 float FRONT_OUT_L = 1100;	//袋小路時前センサー閾値
 
@@ -315,11 +315,11 @@ float R_WALL_dia = 400;	//斜め時 横壁のアリ判定
 float L_WALL_dia = 400;	//斜め時 横壁のアリ判定
 
 float RF_WALL1 = 210; //斜め時 姿勢制御閾値(壁ナシ）
-float LF_WALL1 = 260; //斜め時 姿勢制御閾値(壁ナシ）
+float LF_WALL1 = 220; //斜め時 姿勢制御閾値(壁ナシ）
 #define KIREME_R_DIA 40
 #define KIREME_L_DIA 40
-float RF_WALL = 210; //斜め時 姿勢制御閾値(壁アリ）
-float LF_WALL = 260;  //斜め時 姿勢制御閾値(壁アリ）
+float RF_WALL = 175; //斜め時 姿勢制御閾値(壁アリ）
+float LF_WALL = 210;  //斜め時 姿勢制御閾値(壁アリ）
 
 int check_sen_error_dia(void) {
 	int error = 0;
@@ -408,9 +408,11 @@ void errorVelocity(void) {
 		Se.error_old = 0;
 		C.s = 0;
 	}
-	Gy.error_delta = Gy.error_now - (W_now - settleGyro);
-	Gy.error_old += Gy.error_now;
 	Gy.error_now = (W_now - settleGyro);
+	Gy.error_old += Gy.error_now;
+	Gy.error_delta = Gy.error_now - Gy.before;
+
+	Gy.before = Gy.error_now;
 	C.g = Gyro.Kp * Gy.error_now + Gyro.Ki * Gy.error_old
 			+ Gyro.Kd * Gy.error_delta;
 }
